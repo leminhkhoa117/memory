@@ -1,9 +1,12 @@
-const assetUrl = (relativePath) => new URL(relativePath, import.meta.url).href
-
-const introPhoto = assetUrl('../image/khuyen.jpg')
-const firstPhoto = assetUrl('../image/1000001736.jpg')
-const secondPhoto = assetUrl('../image/1000001738.jpg')
-const thirdPhoto = assetUrl('../image/1000001739.jpg')
+const introPhoto = new URL('../image/khuyen.jpg', import.meta.url).href
+const firstPhoto = new URL('../image/1000001736.jpg', import.meta.url).href
+const secondPhoto = new URL('../image/1000001738.jpg', import.meta.url).href
+const thirdPhoto = new URL('../image/1000001739.jpg', import.meta.url).href
+const memoryVideo = new URL('../image/lv_0_20260620105157.mp4', import.meta.url).href
+const backgroundMusic = new URL(
+  '../music/lokenwarrior-river-romance-482803.mp3',
+  import.meta.url,
+).href
 
 export const story = {
   intro: {
@@ -71,7 +74,7 @@ export const story = {
   },
   video: {
     chapter: 'Một thước phim anh luôn giữ',
-    src: assetUrl('../image/lv_0_20260620105157.mp4'),
+    src: memoryVideo,
     poster: secondPhoto,
     caption: 'anh thực sự yêu khoảnh khắc này',
   },
@@ -85,7 +88,7 @@ export const story = {
     closing: 'Cảm ơn em đã lắng nghe đến tận đây.',
   },
   music: {
-    src: assetUrl('../music/lokenwarrior-river-romance-482803.mp3'),
+    src: backgroundMusic,
     label: 'Nhạc nền River Romance',
   },
 }

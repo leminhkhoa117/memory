@@ -10,67 +10,67 @@ const backgroundMusic = new URL(
 
 export const story = {
   intro: {
-    eyebrow: 'Một câu chuyện anh đã giữ trong lòng',
-    title: 'Có một điều, anh muốn kể em nghe.',
+    eyebrow: 'Đôi lời anh muốn nói với em',
+    title: 'Anh đã suy nghĩ rất nhiều trước khi nói điều này.',
     subtitle:
-      'Không cần vội đâu. Chỉ là vài khoảnh khắc nhỏ, và tất cả đều dẫn về phía em.',
+      'Hy vọng là em có thể dành một chút thời gian để xem đến cuối.',
     background: introPhoto,
   },
   firstMeet: {
-    chapter: { number: '01', label: 'nơi câu chuyện bắt đầu' },
+    chapter: { number: '01', label: 'Nơi câu chuyện bắt đầu' },
     date: 'Một ngày rất đỗi bình thường',
-    title: 'Lần đầu gặp em',
+    title: 'Người đặc biệt.',
     body:
-      'Anh không biết một cuộc gặp có thể ở lại lâu đến thế. Từ hôm ấy, giữa rất nhiều điều bình thường, em trở thành điều anh luôn nhớ nhất.',
+      'Anh chẳng nhớ mọi thứ đã bắt đầu như thế nào nữa, chỉ là... vào một ngày bình thường, những cuộc trò chuyện bình thường, không biết từ lúc nào em đã trở thành người đặc biệt trong mắt anh.',
     image: firstPhoto,
     imageAlt: 'Khoảnh khắc đầu tiên của hai chúng ta',
   },
   gallery: {
-    chapter: { number: '02', label: 'những ngày có em' },
-    title: 'Những lần được đi cùng em',
+    chapter: { number: '02', label: 'Những ngày có em' },
+    title: 'Những lần được đi chơi cùng em',
     intro:
-      'Mỗi bức ảnh giữ một phần ký ức. Còn anh thì giữ cả cảm giác khi được ở cạnh em.',
+      'Có thể với em nó chỉ là những tấm ảnh bình thường, nhưng mà với anh thì nó còn là cảm giác khi được ở cạnh em.',
     moments: [
       {
         image: secondPhoto,
         alt: 'Hai người cùng lưu lại một khoảnh khắc vui vẻ',
         index: '01',
-        caption: 'Có em trong khung hình, mọi ngày đều sáng hơn một chút.',
+        caption: 'Khung hình có em là khung hình đẹp nhất.',
       },
       {
         image: firstPhoto,
         alt: 'Hai người ngồi cạnh nhau cùng bó hoa',
         index: '02',
-        caption: 'Anh thích cách những phút bình thường bên em trở nên đáng nhớ.',
+        caption: 'Mỗi phút giây bên em đều là khoảnh khắc đáng nhớ.',
       },
       {
         image: thirdPhoto,
         alt: 'Hai người đeo kính trắng tạo dáng cùng nhau',
         index: '03',
-        caption: 'Và có những lúc chỉ cần cùng em vui một chút là đủ.',
+        caption: 'Anh mong là dù có chuyện gì thì em vẫn nở nụ cười.',
       },
     ],
   },
   listening: {
-    chapter: { number: '03', label: 'những điều em kể' },
-    title: 'Anh thích lắng nghe em kể',
+    chapter: { number: '03', label: 'Những lời em nói' },
+    title: 'Anh thích trò chuyện cùng em.',
     intro:
-      'Có những điều em kể rất lâu, cũng có những điều chỉ là một câu vu vơ. Anh đều muốn nhớ.',
+      'Tính anh hay quên lắm, nhiều khi mọi người nói gì, năm phút sau anh lại quên mất. Nhưng mà những lời em nói, từ câu chuyện dài em kể đến những lời nói vu vơ, anh đều nhớ cả.',
     quotes: [
-      'Anh yêu cách mắt em sáng lên khi kể về điều mình thích.',
-      'Anh quý cả những khoảng lặng, khi mình chẳng cần nói gì mà vẫn thấy bình yên.',
-      'Và anh nhận ra, điều anh mong nhất là được nghe em kể thêm thật nhiều câu chuyện nữa.',
+      'Anh thích nụ cười của em mỗi khi nói về điều mà em thích.',
+      'Anh thích những lúc mình chẳng biết nên đi đâu nữa, rồi lại ra biển.',
+      'Có điều là anh mong em sẽ quan tâm đến sức khoẻ của mình hơn, ăn đủ bữa và đi ngủ sớm.',
     ],
   },
   doubt: {
-    chapter: { number: '04', label: 'một khoảng lặng trong tim' },
+    chapter: { number: '04', label: 'Một khoảng lặng nho nhỏ' },
     title: 'Anh đã do dự rất lâu',
     lines: [
-      'Nếu nói ra, mọi thứ có khác đi không?',
-      'Nếu cứ im lặng, anh sẽ tiếc chứ?',
-      'Có lẽ chân thành cũng cần một lần can đảm.',
+      'Anh đã sợ, anh sợ nói ra rồi thì những khoảnh khắc tuyệt vời đó sẽ không còn nữa.',
+      'Không biết em có để ý không, những bài nhạc anh viết ra đều là những lời anh muốn gửi đến em.',
+      'Hôm nay anh đã hỏi con tìm mình, nó nói rằng nếu anh im lặng, anh sẽ phải tiếc nuối.',
     ],
-    note: 'Tim anh đã trả lời trước cả khi anh kịp tìm đủ lời.',
+    note: 'Hy vọng là em vẫn còn đủ kiên nhẫn để xem đến đây.',
   },
   video: {
     chapter: 'Một thước phim anh luôn giữ',
@@ -79,13 +79,13 @@ export const story = {
     caption: 'anh thực sự yêu khoảnh khắc này',
   },
   confession: {
-    chapter: 'Lời từ trái tim',
+    chapter: 'Anh muốn nói là',
     lines: [
       'Anh thật sự thích em.',
-      'Nếu em cũng muốn cho chúng ta một cơ hội, hãy nhắn lại cho anh nhé.',
-      'Còn nếu em không muốn trả lời, em không cần nhắn gì cả. Anh sẽ hiểu, và luôn tôn trọng cảm xúc của em.',
+      'Liệu em có thể cho anh một cơ hội được tìm hiểu em một cách nghiêm túc không? Hãy nhắn cho anh nếu em đồng ý.',
+      'Nếu em không đồng ý thì không cần nhắn gì cả, hãy cứ phớt lờ nó đi. Anh sẽ hiểu đó là lời từ chối, và luôn tôn trọng cảm xúc của em.',
     ],
-    closing: 'Cảm ơn em đã lắng nghe đến tận đây.',
+    closing: 'Cảm ơn em đã dành thời gian xem đến tận đây, đó là tất cả những gì anh muốn nói.',
   },
   music: {
     src: backgroundMusic,

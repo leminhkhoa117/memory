@@ -16,9 +16,9 @@ export function useTypewriter(lines, isActive = true) {
     let delay = isDeleting ? 34 : 62
 
     if (isComplete && !isDeleting) {
-      delay = 1700
+      delay = 4000
     } else if (isEmpty && isDeleting) {
-      delay = 420
+      delay = 450
     }
 
     const timeout = window.setTimeout(() => {

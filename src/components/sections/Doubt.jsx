@@ -1,15 +1,16 @@
 import { motion as Motion } from 'framer-motion'
 import { Heart } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation'
 import { useTypewriter } from '../../hooks/useTypewriter'
 import ChapterMarker from '../ChapterMarker'
 
 function Doubt({ content }) {
   const sectionRef = useRef(null)
-  const typedText = useTypewriter(content.lines)
+  const [isTypewriterActive, setIsTypewriterActive] = useState(false)
+  const typedText = useTypewriter(content.lines, isTypewriterActive)
 
-  useScrollAnimation(sectionRef, ({ gsap }) => {
+  useScrollAnimation(sectionRef, ({ gsap, ScrollTrigger }) => {
     gsap.from('.doubt__content > *', {
       y: 36,
       opacity: 0,
@@ -21,6 +22,15 @@ function Doubt({ content }) {
         start: 'top 62%',
       },
     })
+
+    const typewriterTrigger = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top 68%',
+      once: true,
+      onEnter: () => setIsTypewriterActive(true),
+    })
+
+    return () => typewriterTrigger.kill()
   })
 
   return (

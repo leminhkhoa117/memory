@@ -68,7 +68,7 @@ export const story = {
     lines: [
       'Anh đã sợ, anh sợ nói ra rồi thì những khoảnh khắc tuyệt vời đó sẽ không còn nữa.',
       'Không biết em có để ý không, những bài nhạc anh viết ra đều là những lời anh muốn gửi đến em.',
-      'Hôm nay anh đã hỏi con tìm mình, nó nói rằng nếu anh im lặng, anh sẽ phải tiếc nuối.',
+      'Hôm nay anh đã hỏi con tim mình, nó nói rằng nếu anh im lặng, anh sẽ phải tiếc nuối.',
     ],
     note: 'Hy vọng là em vẫn còn đủ kiên nhẫn để xem đến đây.',
   },

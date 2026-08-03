@@ -58,8 +58,8 @@ export const story = {
       'Tính anh hay quên lắm, nhiều khi mọi người nói gì, năm phút sau anh lại quên mất. Nhưng mà những lời em nói, từ câu chuyện dài em kể đến những lời nói vu vơ, anh đều nhớ cả.',
     quotes: [
       'Anh thích nụ cười của em mỗi khi nói về điều mà em thích.',
-      'Anh thích những lúc mình chẳng biết nên đi đâu nữa, rồi lại ra biển.',
-      'Có điều là anh mong em sẽ quan tâm đến sức khoẻ của mình hơn, ăn đủ bữa và đi ngủ sớm.',
+      'Anh thích cả những lúc mình chẳng biết nên đi đâu nữa, rồi cuối cùng lại cùng nhau ra biển.',
+      'Có những ngày anh chỉ mong em đừng quá mệt, nhớ chăm sóc bản thân và dành cho mình một chút bình yên.',
     ],
   },
   doubt: {
@@ -70,7 +70,7 @@ export const story = {
       'Không biết em có để ý không, những bài nhạc anh viết ra đều là những lời anh muốn gửi đến em.',
       'Hôm nay anh đã hỏi con tim mình, nó nói rằng nếu anh im lặng, anh sẽ phải tiếc nuối.',
     ],
-    note: 'Hy vọng là em vẫn còn đủ kiên nhẫn để xem đến đây.',
+    note: 'Và đây là lần anh chọn lắng nghe trái tim mình.',
   },
   video: {
     chapter: 'Một thước phim anh luôn giữ',

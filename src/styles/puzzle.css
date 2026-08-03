@@ -124,15 +124,364 @@
   border-radius: 2px;
 }
 
-.puzzle__board-placeholder {
+.puzzle__board--dim {
+  filter: brightness(0.55) saturate(0.7);
+  transition: filter 0.6s ease;
+}
+
+/* --- Kỷ vật kéo thả --- */
+
+.keepsake {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   display: grid;
   place-items: center;
+  cursor: grab;
+  touch-action: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 7px 11px rgba(10, 8, 5, 0.5));
+}
+
+.keepsake:active {
+  cursor: grabbing;
+}
+
+.keepsake__art,
+.keepsake__art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.keepsake__glow {
+  position: absolute;
+  inset: -42%;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 238, 200, 0.6),
+    rgba(255, 224, 168, 0.16) 46%,
+    transparent 72%
+  );
+  filter: blur(7px);
+}
+
+.keepsake--placed {
+  cursor: default;
+  filter: drop-shadow(0 0 14px rgba(255, 230, 182, 0.6));
+}
+
+.keepsake--hinted .keepsake__art {
+  animation: keepsake-shake 0.62s ease-in-out infinite;
+}
+
+@keyframes keepsake-shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(-3px, 0, 0) rotate(-2.5deg);
+  }
+  75% {
+    transform: translate3d(3px, 0, 0) rotate(2.5deg);
+  }
+}
+
+.keepsake-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  filter: grayscale(1) brightness(1.7) drop-shadow(0 0 10px rgba(255, 232, 190, 0.5));
+}
+
+.keepsake-ghost svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Nét số ẩn hiện dần khi ghép đúng --- */
+
+.digit-glyph {
+  position: absolute;
+  pointer-events: none;
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 234, 196, 0.85);
+}
+
+.digit-glyph--locking {
+  color: rgba(255, 240, 210, 0.16);
+  text-shadow: 0 0 26px rgba(255, 226, 172, 0.75);
+}
+
+/* --- Khay kết quả --- */
+
+.digit-tray {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.digit-tray__label {
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(232, 224, 207, 0.38);
+}
+
+.digit-tray__slots {
+  display: flex;
+  gap: 10px;
+}
+
+.digit-slot {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 62px;
+  font-family: 'Lora', serif;
+  font-size: 28px;
+  color: rgba(255, 238, 206, 0.9);
+  background: linear-gradient(180deg, rgba(238, 228, 204, 0.07), rgba(238, 228, 204, 0.02));
+  border: 1px solid rgba(226, 214, 186, 0.16);
+  border-radius: 3px;
+}
+
+.digit-slot__empty {
+  color: rgba(232, 224, 207, 0.22);
+}
+
+.digit-slot--next {
+  border-color: rgba(255, 226, 172, 0.38);
+  box-shadow: 0 0 18px rgba(255, 220, 160, 0.14) inset;
+}
+
+.digit-slot--filled {
+  border-color: rgba(255, 226, 172, 0.42);
+  text-shadow: 0 0 16px rgba(255, 220, 160, 0.55);
+}
+
+/* --- Nút gợi ý --- */
+
+.hint-button {
+  position: fixed;
+  bottom: 22px;
+  left: 20px;
+  z-index: 70;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 16px;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: rgba(244, 236, 218, 0.85);
+  cursor: pointer;
+  background: rgba(40, 36, 30, 0.7);
+  border: 1px solid rgba(226, 214, 186, 0.2);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+/* --- Điện thoại quay số --- */
+
+.rotary-layer {
+  position: absolute;
+  right: 26px;
+  bottom: 92px;
+  z-index: 75;
+}
+
+.rotary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 20px 16px;
+  background: linear-gradient(165deg, rgba(46, 42, 35, 0.94), rgba(26, 24, 20, 0.94));
+  border: 1px solid rgba(226, 214, 186, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55);
+}
+
+.rotary__head {
+  text-align: center;
+}
+
+.rotary__label {
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 21px;
+  color: rgba(255, 238, 206, 0.92);
+}
+
+.rotary__helper {
+  margin: 2px 0 0;
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(232, 224, 207, 0.44);
+}
+
+.rotary__body {
+  position: relative;
+  width: 214px;
+  height: 214px;
+  background: radial-gradient(circle at 38% 32%, #55503f, #2b2822 68%);
+  border: 1px solid rgba(226, 214, 186, 0.16);
+  border-radius: 50%;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.55);
+}
+
+.rotary__plate {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.rotary__hole {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  color: rgba(246, 238, 220, 0.86);
+  cursor: pointer;
+  background: radial-gradient(circle at 40% 35%, rgba(20, 18, 15, 0.95), rgba(10, 9, 7, 0.95));
+  border: 1px solid rgba(226, 214, 186, 0.22);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rotary__hole:disabled {
+  cursor: default;
+}
+
+.rotary__stop {
+  position: absolute;
+  z-index: 2;
+  width: 12px;
+  height: 26px;
+  background: linear-gradient(180deg, #d9cba8, #8d8168);
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+}
+
+.rotary__hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 76px;
+  height: 76px;
+  background: radial-gradient(circle at 40% 35%, #6b6350, #33302a);
+  border: 1px solid rgba(226, 214, 186, 0.16);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rotary__readout {
+  display: flex;
+  gap: 10px;
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  color: rgba(232, 224, 207, 0.3);
+}
+
+.rotary__readout .is-set {
+  color: rgba(255, 236, 200, 0.95);
+  text-shadow: 0 0 14px rgba(255, 218, 158, 0.5);
+}
+
+/* --- Màn thành công --- */
+
+.puzzle-success {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 45%, rgba(64, 56, 42, 0.94), rgba(16, 14, 12, 0.97) 70%);
+}
+
+.puzzle-success__burst {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 238, 200, 0.9), transparent 65%);
+  border-radius: 50%;
+}
+
+.puzzle-success__title {
+  position: relative;
+  margin: 0;
+  font-family: 'Lora', serif;
+  font-size: clamp(38px, 8vw, 68px);
+  font-weight: 500;
+  color: #fff2d8;
+  text-shadow: 0 0 34px rgba(255, 222, 164, 0.55);
+}
+
+.puzzle-success__line {
+  position: relative;
+  max-width: 30ch;
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(19px, 3.4vw, 25px);
+  color: rgba(240, 230, 210, 0.82);
+}
+
+.puzzle-success__cta {
+  position: relative;
+  padding: 14px 34px;
+  overflow: hidden;
   font-family: 'Lora', serif;
   font-size: 14px;
-  font-style: italic;
-  color: rgba(226, 216, 192, 0.34);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f7ecd6;
+  cursor: pointer;
+  background: rgba(255, 236, 200, 0.06);
+  border: 1px solid rgba(255, 228, 178, 0.42);
+  border-radius: 999px;
+}
+
+.puzzle-success__cta-pulse {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 226, 172, 0.3), transparent 70%);
+  animation: cta-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes cta-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.12);
+  }
 }
 
 .puzzle__footer {
@@ -142,13 +491,42 @@
   min-height: 96px;
 }
 
+@media (max-width: 720px) {
+  .rotary-layer {
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(16, 14, 12, 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  .rotary__body {
+    width: 196px;
+    height: 196px;
+  }
+
+  .hint-button {
+    bottom: 18px;
+    left: 14px;
+    padding: 0 14px;
+  }
+
+  .digit-slot {
+    width: 44px;
+    height: 54px;
+    font-size: 24px;
+  }
+}
+
 @media (max-width: 640px) {
   .puzzle__inner {
     width: calc(100% - 20px);
-    padding: 16px 0 14px;
+    /* Chừa chỗ cho nút gợi ý và nút nhạc đang neo cố định ở đáy màn hình. */
+    padding: 16px 0 84px;
   }
 
   .puzzle__footer {
-    min-height: 84px;
+    min-height: 78px;
   }
 }

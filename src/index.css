@@ -334,6 +334,10 @@ video {
   pointer-events: none;
 }
 
+.particle-field {
+  contain: strict;
+}
+
 .ambient-heart {
   position: absolute;
   z-index: 1;
@@ -980,54 +984,334 @@ video {
   position: sticky;
   z-index: 2;
   top: 0;
-  display: flex;
+  display: grid;
   min-height: 100svh;
+  place-items: center;
+  padding-block: 44px;
+  text-align: center;
+  perspective: 1400px;
+}
+
+.letter-experience {
+  position: relative;
+  display: grid;
+  width: min(1040px, 98vw);
+  place-items: center;
+}
+
+.letter-invitation {
+  position: absolute;
+  z-index: 8;
+  bottom: calc(100% + 14px);
+  left: 0;
+  display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
+  gap: 7px;
+  color: rgba(255, 244, 232, 0.9);
+  pointer-events: none;
+}
+
+.letter-invitation p {
+  margin: 0;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.letter-invitation svg {
+  animation: letter-arrow 1.5s ease-in-out infinite;
+}
+
+@keyframes letter-arrow {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.letter-stage {
+  position: relative;
+  width: min(1000px, 96vw);
+  height: min(760px, 90svh);
+  outline: none;
+  perspective: 1400px;
+  touch-action: pan-y;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+
+.letter-stage:active {
+  cursor: pointer;
+}
+
+.letter-stage--open {
+  cursor: grab;
+}
+
+.letter-stage--open:active {
+  cursor: grabbing;
+}
+
+.letter-stage:focus-visible {
+  outline: 1px solid rgba(255, 235, 222, 0.72);
+  outline-offset: 8px;
+}
+
+.envelope {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  width: min(700px, 86vw);
+  aspect-ratio: 1.65;
+  transform: translateX(-50%);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+}
+
+.letter-stage--open .envelope {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.letter-stage--letter-above .envelope {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.envelope--back {
+  z-index: 1;
+  filter: drop-shadow(0 30px 38px rgba(57, 20, 29, 0.34));
+}
+
+.envelope--flap {
+  z-index: 4;
+}
+
+.letter-stage--open .envelope--flap {
+  z-index: 1;
+}
+
+.envelope--front {
+  z-index: 3;
+}
+
+.envelope--seal {
+  z-index: 5;
+  pointer-events: none;
+}
+
+.envelope__back,
+.envelope__flap,
+.envelope__pocket {
+  position: absolute;
+  inset: 0;
+}
+
+.envelope__back {
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(0deg, rgba(122, 89, 60, 0.035) 0 1px, transparent 1px 5px),
+    #edc78f;
+  box-shadow:
+    inset 0 0 0 1px rgba(119, 78, 46, 0.16),
+    inset 0 0 38px rgba(176, 117, 72, 0.1);
+}
+
+.envelope__flap {
+  z-index: 4;
+  height: 58%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background:
+    linear-gradient(165deg, rgba(255, 244, 213, 0.18), transparent 45%),
+    linear-gradient(165deg, #f2d09c, #dfa969);
+  transform-origin: top center;
+  backface-visibility: visible;
+}
+
+.envelope__pocket {
+  z-index: 3;
+  clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(140deg, transparent 49.5%, rgba(130, 88, 52, 0.18) 50%, transparent 50.5%),
+    linear-gradient(40deg, transparent 49.5%, rgba(130, 88, 52, 0.18) 50%, transparent 50.5%),
+    linear-gradient(160deg, #ebc590, #d9a36c);
+  border-radius: 0 0 5px 5px;
+}
+
+.envelope__stamp {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: grid;
+  width: 52px;
+  height: 44px;
+  place-items: center;
+  color: #b66868;
+  border: 2px dotted rgba(156, 96, 76, 0.5);
+  background: rgba(247, 218, 172, 0.9);
+  font-family: serif;
+  font-size: 20px;
+  transform: rotate(3deg);
+}
+
+.envelope__address-line {
+  position: absolute;
+  left: 34px;
+  height: 1px;
+  background: rgba(120, 83, 58, 0.26);
+}
+
+.envelope__address-line--one {
+  top: 42%;
+  width: 34%;
+}
+
+.envelope__address-line--two {
+  top: 50%;
+  width: 25%;
+}
+
+.envelope__seal {
+  position: absolute;
+  z-index: 5;
+  top: 45%;
+  left: 50%;
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  color: #fff0dd;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.18), transparent 24%),
+    #a94958;
+  box-shadow: 0 7px 14px rgba(63, 16, 27, 0.25);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.35s ease, transform 0.5s ease;
+}
+
+.letter-stage--open .envelope__seal {
+  opacity: 0;
+  transform: translate(-50%, -70%) scale(0.72);
+}
+
+.confession-letter {
+  position: absolute;
+  z-index: 2;
+  inset: 1% 3% 7%;
+  display: grid;
+  place-items: center;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.confession-letter--above-envelope {
+  z-index: 6;
+}
+
+.confession-letter__paper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: min(590px, 76svh);
+  flex-direction: column;
   justify-content: center;
-  padding-block: 90px;
-  text-align: center;
+  overflow: hidden;
+  padding: 52px 64px 46px;
+  color: #44242c;
+  border: 1px solid rgba(112, 61, 68, 0.14);
+  border-radius: 3px;
+  background:
+    linear-gradient(rgba(122, 72, 69, 0.055) 1px, transparent 1px) 0 43px / 100% 32px,
+    #fff8ed;
+  box-shadow:
+    0 34px 65px rgba(57, 20, 29, 0.26),
+    inset 0 0 70px rgba(211, 155, 126, 0.09);
+}
+
+.confession-letter__paper::before,
+.confession-letter__paper::after {
+  position: absolute;
+  color: rgba(171, 95, 101, 0.2);
+  font-family: 'Dancing Script', cursive;
+  font-size: 32px;
+  content: '♡';
+}
+
+.confession-letter__paper::before {
+  top: 16px;
+  left: 20px;
+}
+
+.confession-letter__paper::after {
+  right: 20px;
+  bottom: 12px;
+  transform: rotate(12deg);
 }
 
 .confession__content .confession__note {
-  margin-bottom: 44px;
-  color: #ffe2c7;
+  justify-content: center;
+  margin-bottom: 26px;
+  color: #a65761;
 }
 
 .confession__line {
+  position: relative;
+  width: 100%;
   max-width: 850px;
   margin: 0;
 }
 
+.confession__line-ghost {
+  visibility: hidden;
+}
+
+.confession__line-typed {
+  position: absolute;
+  inset: 0;
+}
+
 .confession__line--1 {
   font-family: 'Lora', serif;
-  font-size: 76px;
+  font-size: 54px;
   font-weight: 500;
   line-height: 1.1;
 }
 
 .confession__line--2 {
-  margin-top: 48px;
-  color: rgba(255, 248, 238, 0.92);
+  margin-top: 30px;
+  color: rgba(68, 36, 44, 0.9);
   font-family: 'Lora', serif;
-  font-size: 27px;
+  font-size: 21px;
   line-height: 1.55;
 }
 
 .confession__line--3 {
   max-width: 700px;
-  margin-top: 34px;
-  color: rgba(255, 248, 238, 0.68);
+  margin-top: 24px;
+  margin-inline: auto;
+  color: rgba(68, 36, 44, 0.64);
   font-size: 13px;
   font-weight: 300;
   line-height: 1.9;
 }
 
+.confession__cursor {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: cursor-blink 0.8s steps(1) infinite;
+}
+
 .confession__closing {
-  margin: 46px 0 0;
-  color: #ffd9bf;
+  margin: 28px 0 0;
+  color: #a65761;
   font-family: 'Dancing Script', cursive;
-  font-size: 25px;
+  font-size: 23px;
 }
 
 @media (max-width: 1100px) {
@@ -1054,7 +1338,7 @@ video {
   }
 
   .confession__line--1 {
-    font-size: 60px;
+    font-size: 48px;
   }
 }
 
@@ -1361,12 +1645,36 @@ video {
   }
 
   .confession {
-    min-height: 190svh;
+    min-height: 210svh;
   }
 
   .confession__content {
-    width: calc(100% - 40px);
-    padding-block: 64px;
+    width: 100%;
+    padding-block: 24px;
+  }
+
+  .letter-stage {
+    width: calc(100vw - 20px);
+    height: min(720px, 92svh);
+  }
+
+  .envelope {
+    bottom: 3%;
+    width: min(540px, 96vw);
+    aspect-ratio: 1.6;
+  }
+
+  .letter-stage--open .envelope {
+    transform: translateX(-50%);
+  }
+
+  .confession-letter {
+    inset: 1% 1% 5%;
+  }
+
+  .confession-letter__paper {
+    height: min(600px, 78svh);
+    padding: 38px 24px 34px;
   }
 
   .confession__content .confession__note {
@@ -1374,23 +1682,63 @@ video {
   }
 
   .confession__line--1 {
-    font-size: 42px;
+    font-size: 38px;
   }
 
   .confession__line--2 {
-    margin-top: 34px;
-    font-size: 21px;
+    margin-top: 24px;
+    font-size: 18px;
   }
 
   .confession__line--3 {
-    margin-top: 26px;
-    font-size: 12px;
-    line-height: 1.8;
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.7;
   }
 
   .confession__closing {
-    margin-top: 34px;
-    font-size: 22px;
+    margin-top: 24px;
+    font-size: 20px;
+  }
+}
+
+@media (max-height: 560px) and (min-width: 601px) {
+  .envelope {
+    width: min(560px, 72vw);
+  }
+
+  .confession-letter__paper {
+    height: min(560px, 80svh);
+    padding: 28px 48px 26px;
+  }
+
+  .confession__content .confession__note {
+    margin-bottom: 14px;
+  }
+
+  .confession__line--1 {
+    font-size: 36px;
+  }
+
+  .confession__line--2 {
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .confession__line--3 {
+    margin-top: 14px;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .confession__closing {
+    margin-top: 14px;
+    font-size: 18px;
+  }
+
+  .letter-stage--open .envelope {
+    transform: translateX(-50%);
   }
 }
 
@@ -1402,4 +1750,15 @@ video {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+.particle-field--intense .ambient-heart {
+  animation-name: confession-heart-drift;
+  animation-duration: 14s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes confession-heart-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); opacity: 0.28; }
+  50% { transform: translate3d(0, -22px, 0) rotate(5deg); opacity: 0.68; }
 }

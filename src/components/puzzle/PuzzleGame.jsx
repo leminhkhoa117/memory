@@ -18,7 +18,7 @@ function PuzzleGame({ onComplete }) {
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       aria-label="Minigame ghép kỷ vật"
     >
-      <ParticleField id="puzzle-particles" />
+      <ParticleField id="puzzle-particles" variant="archive" />
 
       <div className="puzzle__inner">
         <header className="puzzle__header">

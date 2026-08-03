@@ -7,10 +7,11 @@ export default {
         ink: '#171113',
         paper: '#f1e5dc',
         kraft: '#d8c3a5',
-        desk: {
-          DEFAULT: '#5a3a28',
-          dark: '#3a2318',
-          light: '#7d5336',
+        archive: {
+          DEFAULT: '#4a453c',
+          dark: '#1d1b18',
+          light: '#6b6355',
+          bone: '#e8e0cf',
         },
         rose: {
           DEFAULT: '#b96e72',

@@ -24,7 +24,7 @@ function BookOpening({ cover, firstPage, seal, onReveal, onComplete }) {
         ) * 1.25
 
       const reveal = () => {
-        gsap.set('.book-opening', { pointerEvents: 'none' })
+        gsap.set(rootRef.current, { pointerEvents: 'none' })
         callbacksRef.current.onReveal?.()
       }
       const finish = () => callbacksRef.current.onComplete?.()
@@ -37,7 +37,7 @@ function BookOpening({ cover, firstPage, seal, onReveal, onComplete }) {
           .fromTo('.book', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.2)
           .to({}, { duration: 1.2 })
           .call(reveal)
-          .to('.book-opening', { opacity: 0, duration: 0.6 })
+          .to(rootRef.current, { opacity: 0, duration: 0.6 })
           .call(finish)
         return
       }
@@ -68,7 +68,6 @@ function BookOpening({ cover, firstPage, seal, onReveal, onComplete }) {
           1.15,
         )
         .fromTo('.book__title', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.8 }, 1.45)
-        .fromTo('.book__footnote', { opacity: 0 }, { opacity: 1, duration: 0.7 }, 1.7)
         .to('.book-opening__aside', { opacity: 1, duration: 0.5 }, 1.9)
 
         .to('.book__seal', { scale: 0.55, opacity: 0, duration: 0.4, ease: 'power2.in' }, 2.5)
@@ -90,7 +89,7 @@ function BookOpening({ cover, firstPage, seal, onReveal, onComplete }) {
         .to('.book__page-content', { opacity: 0, duration: 0.55 }, 4.05)
         .to('.book-opening__veil', { backgroundColor: '#efe6d4', duration: 0.9 }, 4.1)
         .call(reveal)
-        .to('.book-opening', { opacity: 0, duration: 0.8, ease: 'power2.inOut' })
+        .to(rootRef.current, { opacity: 0, duration: 0.8, ease: 'power2.inOut' })
         .call(finish)
     }, rootRef)
 
@@ -132,7 +131,6 @@ function BookOpening({ cover, firstPage, seal, onReveal, onComplete }) {
             <p className="book__eyebrow">{cover.eyebrow}</p>
             <p className="book__stamp">{cover.stamp}</p>
             <h2 className="book__title">{cover.title}</h2>
-            <p className="book__footnote">{cover.footnote}</p>
             <span className="book__seal" aria-hidden="true">
               <span className="book__seal-mark">{seal.mark}</span>
             </span>

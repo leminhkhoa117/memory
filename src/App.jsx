@@ -1,48 +1,74 @@
 import { AnimatePresence } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { story, preloadAssets } from './content'
+import puzzleContent from './data/puzzleContent'
 import notebookContent from './data/notebookContent'
 import LoadingScreen from './components/LoadingScreen'
 import MusicToggle from './components/MusicToggle'
+import StartScreen from './components/start/StartScreen'
 import PuzzleGame from './components/puzzle/PuzzleGame'
 import BookOpening from './components/transition/BookOpening'
-import StoryExperience from './StoryExperience'
+import Notebook from './components/notebook/Notebook'
 
 const STAGE = {
   loading: 'loading',
+  start: 'start',
   puzzle: 'puzzle',
   transition: 'transition',
-  story: 'story',
+  notebook: 'notebook',
 }
 
-/** Thời gian minigame tự mờ dần trước khi bị gỡ khỏi DOM. */
+/** Thời gian mỗi lớp tự mờ dần trước khi bị gỡ khỏi DOM. */
+const START_FADE_OUT = 950
 const PUZZLE_FADE_OUT = 900
 
+/** Khi chạy dev có thể vào thẳng một chặng qua ?stage=... để khỏi chơi lại từ đầu. */
+const INITIAL_STAGE = (() => {
+  if (!import.meta.env.DEV) {
+    return STAGE.loading
+  }
+  const requested = new URLSearchParams(window.location.search).get('stage')
+  return Object.values(STAGE).includes(requested) ? requested : STAGE.loading
+})()
+
 function App() {
-  const [stage, setStage] = useState(STAGE.loading)
-  const [isPuzzleMounted, setIsPuzzleMounted] = useState(false)
-  const [isTransitionMounted, setIsTransitionMounted] = useState(false)
-  const unmountTimerRef = useRef(null)
+  const [stage, setStage] = useState(INITIAL_STAGE)
+  const [isStartMounted, setIsStartMounted] = useState(INITIAL_STAGE === STAGE.start)
+  const [isPuzzleMounted, setIsPuzzleMounted] = useState(INITIAL_STAGE === STAGE.puzzle)
+  const [isTransitionMounted, setIsTransitionMounted] = useState(
+    INITIAL_STAGE === STAGE.transition,
+  )
+  const timersRef = useRef([])
 
-  useEffect(() => () => window.clearTimeout(unmountTimerRef.current), [])
-
-  const handleLoaded = useCallback(() => {
-    setIsPuzzleMounted(true)
-    setStage(STAGE.puzzle)
+  useEffect(() => {
+    const timers = timersRef.current
+    return () => timers.forEach((id) => window.clearTimeout(id))
   }, [])
 
-  // Màn lật bìa phủ lên trên trong lúc minigame mờ dần rồi tự gỡ.
+  const defer = useCallback((callback, delay) => {
+    timersRef.current.push(window.setTimeout(callback, delay))
+  }, [])
+
+  const handleLoaded = useCallback(() => {
+    setIsStartMounted(true)
+    setStage(STAGE.start)
+  }, [])
+
+  // Minigame hiện dần ngay bên dưới trong lúc màn mở đầu sáng lên rồi tan đi.
+  const handleStart = useCallback(() => {
+    setIsPuzzleMounted(true)
+    setStage(STAGE.puzzle)
+    defer(() => setIsStartMounted(false), START_FADE_OUT)
+  }, [defer])
+
   const handlePuzzleComplete = useCallback(() => {
     setStage(STAGE.transition)
     setIsTransitionMounted(true)
-    unmountTimerRef.current = window.setTimeout(
-      () => setIsPuzzleMounted(false),
-      PUZZLE_FADE_OUT,
-    )
-  }, [])
+    defer(() => setIsPuzzleMounted(false), PUZZLE_FADE_OUT)
+  }, [defer])
 
-  // Story được gắn khi trang giấy đã phủ kín màn hình, để lớp phủ tan ra là thấy nội dung.
-  const handleCoverOpened = useCallback(() => setStage(STAGE.story), [])
+  // Cuốn sổ được gắn khi trang giấy đã phủ kín màn hình, để lớp phủ tan ra là thấy nội dung.
+  const handleCoverOpened = useCallback(() => setStage(STAGE.notebook), [])
   const handleTransitionDone = useCallback(() => setIsTransitionMounted(false), [])
 
   return (
@@ -55,6 +81,8 @@ function App() {
 
       {isPuzzleMounted && <PuzzleGame onComplete={handlePuzzleComplete} />}
 
+      {isStartMounted && <StartScreen content={puzzleContent.intro} onStart={handleStart} />}
+
       {isTransitionMounted && (
         <BookOpening
           cover={notebookContent.cover}
@@ -65,7 +93,9 @@ function App() {
         />
       )}
 
-      {stage === STAGE.story && <StoryExperience />}
+      {stage === STAGE.notebook && (
+        <Notebook content={notebookContent} seal={notebookContent.seal} />
+      )}
 
       <MusicToggle content={story.music} />
     </>

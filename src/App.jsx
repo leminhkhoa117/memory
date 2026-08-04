@@ -1,48 +1,83 @@
 import { AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { story, preloadAssets } from './content'
-import { useSmoothScroll } from './hooks/useSmoothScroll'
+import puzzleContent from './data/puzzleContent'
+import notebookContent from './data/notebookContent'
 import LoadingScreen from './components/LoadingScreen'
 import MusicToggle from './components/MusicToggle'
-import StoryProgress from './components/StoryProgress'
-import Intro from './components/sections/Intro'
-import FirstMeet from './components/sections/FirstMeet'
-import MemoryGallery from './components/sections/MemoryGallery'
-import Listening from './components/sections/Listening'
-import Doubt from './components/sections/Doubt'
-import VideoMoment from './components/sections/VideoMoment'
-import Confession from './components/sections/Confession'
+import StartScreen from './components/start/StartScreen'
+import PuzzleGame from './components/puzzle/PuzzleGame'
+import Notebook from './components/notebook/Notebook'
+
+const STAGE = {
+  loading: 'loading',
+  start: 'start',
+  puzzle: 'puzzle',
+  notebook: 'notebook',
+}
+
+/** Thời gian mỗi lớp tự mờ dần trước khi bị gỡ khỏi DOM. */
+const START_FADE_OUT = 950
+const PUZZLE_FADE_OUT = 900
+
+/** Khi chạy dev có thể vào thẳng một chặng qua ?stage=... để khỏi chơi lại từ đầu. */
+const INITIAL_STAGE = (() => {
+  if (!import.meta.env.DEV) {
+    return STAGE.loading
+  }
+  const requested = new URLSearchParams(window.location.search).get('stage')
+  return Object.values(STAGE).includes(requested) ? requested : STAGE.loading
+})()
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [stage, setStage] = useState(INITIAL_STAGE)
+  const [isStartMounted, setIsStartMounted] = useState(INITIAL_STAGE === STAGE.start)
+  const [isPuzzleMounted, setIsPuzzleMounted] = useState(INITIAL_STAGE === STAGE.puzzle)
+  const timersRef = useRef([])
 
-  useSmoothScroll(isLoaded)
+  useEffect(() => {
+    const timers = timersRef.current
+    return () => timers.forEach((id) => window.clearTimeout(id))
+  }, [])
+
+  const defer = useCallback((callback, delay) => {
+    timersRef.current.push(window.setTimeout(callback, delay))
+  }, [])
+
+  const handleLoaded = useCallback(() => {
+    setIsStartMounted(true)
+    setStage(STAGE.start)
+  }, [])
+
+  // Minigame hiện dần ngay bên dưới trong lúc màn mở đầu sáng lên rồi tan đi.
+  const handleStart = useCallback(() => {
+    setIsPuzzleMounted(true)
+    setStage(STAGE.puzzle)
+    defer(() => setIsStartMounted(false), START_FADE_OUT)
+  }, [defer])
+
+  const handlePuzzleComplete = useCallback(() => {
+    setStage(STAGE.notebook)
+    defer(() => setIsPuzzleMounted(false), PUZZLE_FADE_OUT)
+  }, [defer])
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {!isLoaded && (
-          <LoadingScreen
-            key="loader"
-            assets={preloadAssets}
-            onComplete={() => setIsLoaded(true)}
-          />
+        {stage === STAGE.loading && (
+          <LoadingScreen key="loader" assets={preloadAssets} onComplete={handleLoaded} />
         )}
       </AnimatePresence>
 
-      <div className={`story-shell ${isLoaded ? 'story-shell--ready' : ''}`}>
-        <StoryProgress />
-        <main>
-          <Intro content={story.intro} />
-          <FirstMeet content={story.firstMeet} />
-          <MemoryGallery content={story.gallery} />
-          <Listening content={story.listening} />
-          <Doubt content={story.doubt} />
-          <VideoMoment content={story.video} />
-          <Confession content={story.confession} />
-        </main>
-        <MusicToggle content={story.music} />
-      </div>
+      {isPuzzleMounted && <PuzzleGame onComplete={handlePuzzleComplete} />}
+
+      {isStartMounted && <StartScreen content={puzzleContent.intro} onStart={handleStart} />}
+
+      {stage === STAGE.notebook && (
+        <Notebook content={notebookContent} />
+      )}
+
+      <MusicToggle content={story.music} />
     </>
   )
 }

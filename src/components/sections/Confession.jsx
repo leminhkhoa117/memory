@@ -127,7 +127,7 @@ function Confession({ content }) {
   return (
     <section className="confession story-section" id="loi-to-tinh">
       <div className="confession__light" aria-hidden="true" />
-      <ParticleField id="confession-particles" intense />
+      <ParticleField id="confession-particles" variant="intense" />
       <div className="confession__content content-frame">
         <div className="letter-experience">
           <Motion.div

@@ -45,6 +45,7 @@ export function useNotebookSize(containerRef) {
       setSize({
         width: Math.round(pageWidth),
         height: Math.round(pageHeight),
+        stageHeight: Math.round(height),
         // react-pageflip chỉ mở đôi khi khung chứa đủ chỗ cho hai trang.
         isPortrait: width < pageWidth * 2,
       })

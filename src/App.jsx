@@ -7,14 +7,12 @@ import LoadingScreen from './components/LoadingScreen'
 import MusicToggle from './components/MusicToggle'
 import StartScreen from './components/start/StartScreen'
 import PuzzleGame from './components/puzzle/PuzzleGame'
-import BookOpening from './components/transition/BookOpening'
 import Notebook from './components/notebook/Notebook'
 
 const STAGE = {
   loading: 'loading',
   start: 'start',
   puzzle: 'puzzle',
-  transition: 'transition',
   notebook: 'notebook',
 }
 
@@ -35,9 +33,6 @@ function App() {
   const [stage, setStage] = useState(INITIAL_STAGE)
   const [isStartMounted, setIsStartMounted] = useState(INITIAL_STAGE === STAGE.start)
   const [isPuzzleMounted, setIsPuzzleMounted] = useState(INITIAL_STAGE === STAGE.puzzle)
-  const [isTransitionMounted, setIsTransitionMounted] = useState(
-    INITIAL_STAGE === STAGE.transition,
-  )
   const timersRef = useRef([])
 
   useEffect(() => {
@@ -62,14 +57,9 @@ function App() {
   }, [defer])
 
   const handlePuzzleComplete = useCallback(() => {
-    setStage(STAGE.transition)
-    setIsTransitionMounted(true)
+    setStage(STAGE.notebook)
     defer(() => setIsPuzzleMounted(false), PUZZLE_FADE_OUT)
   }, [defer])
-
-  // Cuốn sổ được gắn khi trang giấy đã phủ kín màn hình, để lớp phủ tan ra là thấy nội dung.
-  const handleCoverOpened = useCallback(() => setStage(STAGE.notebook), [])
-  const handleTransitionDone = useCallback(() => setIsTransitionMounted(false), [])
 
   return (
     <>
@@ -82,16 +72,6 @@ function App() {
       {isPuzzleMounted && <PuzzleGame onComplete={handlePuzzleComplete} />}
 
       {isStartMounted && <StartScreen content={puzzleContent.intro} onStart={handleStart} />}
-
-      {isTransitionMounted && (
-        <BookOpening
-          cover={notebookContent.cover}
-          firstPage={notebookContent.firstPage}
-          seal={notebookContent.seal}
-          onReveal={handleCoverOpened}
-          onComplete={handleTransitionDone}
-        />
-      )}
 
       {stage === STAGE.notebook && (
         <Notebook content={notebookContent} seal={notebookContent.seal} />

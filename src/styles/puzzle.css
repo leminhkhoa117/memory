@@ -81,7 +81,7 @@
 
 .puzzle__title {
   margin: 6px 0 0;
-  font-family: 'Caveat', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: clamp(30px, 5.4vw, 48px);
   font-weight: 600;
   line-height: 1.1;
@@ -90,7 +90,7 @@
 
 .puzzle__hint-line {
   margin: 4px 0 0;
-  font-family: 'Caveat', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: clamp(17px, 2.6vw, 22px);
   color: rgba(226, 216, 192, 0.58);
 }
@@ -321,7 +321,7 @@
 
 .rotary__label {
   margin: 0;
-  font-family: 'Caveat', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: 21px;
   color: rgba(255, 238, 206, 0.92);
 }
@@ -444,7 +444,7 @@
   position: relative;
   max-width: 30ch;
   margin: 0;
-  font-family: 'Caveat', cursive;
+  font-family: 'Patrick Hand', cursive;
   font-size: clamp(19px, 3.4vw, 25px);
   color: rgba(240, 230, 210, 0.82);
 }

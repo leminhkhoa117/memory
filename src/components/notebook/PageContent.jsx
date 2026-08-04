@@ -39,57 +39,16 @@ function NotebookVideo({ page, isActive }) {
   )
 }
 
-function PageContent({ page, seal, isActive }) {
-  if (page.kind === 'photo') {
-    return (
-      <figure className="nb-media nb-photo">
-        <span className="nb-photo__tape" aria-hidden="true" />
+function PhotoFrame({ page }) {
+  return (
+    <div className="nb-photo__frame">
+      <span className="nb-photo__tape" aria-hidden="true" />
+      <img src={page.image} alt={page.alt} loading="lazy" />
+    </div>
+  )
+}
 
-        <div className="nb-photo__frame">
-          <img src={page.image} alt={page.alt} loading="lazy" />
-        </div>
-
-        {page.caption && (
-          <figcaption className="nb-media__caption">
-            {page.index && <span className="nb-media__index">{page.index}</span>}
-            {page.caption}
-          </figcaption>
-        )}
-      </figure>
-    )
-  }
-
-  if (page.kind === 'video') {
-    return <NotebookVideo page={page} isActive={isActive} />
-  }
-
-  if (page.kind === 'quotes') {
-    return (
-      <ul className="nb-quotes">
-        {page.quotes.map((quote) => (
-          <li key={quote} className="nb-quotes__item">
-            {quote}
-          </li>
-        ))}
-      </ul>
-    )
-  }
-
-  if (page.kind === 'note') {
-    return <p className="nb-standalone">{page.note}</p>
-  }
-
-  if (page.kind === 'letter') {
-    return (
-      <div className="nb-letter">
-        <p className="nb-paper__eyebrow">{page.eyebrow}</p>
-        <span className="nb-letter__envelope" aria-hidden="true">
-          <span className="nb-letter__seal">{seal.mark}</span>
-        </span>
-      </div>
-    )
-  }
-
+function TextBlock({ page }) {
   return (
     <>
       {page.chapter && (
@@ -109,8 +68,73 @@ function PageContent({ page, seal, isActive }) {
           {line}
         </p>
       ))}
+
+      {page.note && <p className="nb-paper__closing">{page.note}</p>}
     </>
   )
+}
+
+function PageContent({ page, seal, isActive, onOpenLetter }) {
+  if (page.kind === 'photo') {
+    return (
+      <figure className="nb-media nb-photo">
+        <PhotoFrame page={page} />
+
+        {page.caption && (
+          <figcaption className="nb-media__caption">
+            {page.index && <span className="nb-media__index">{page.index}</span>}
+            {page.caption}
+          </figcaption>
+        )}
+      </figure>
+    )
+  }
+
+  if (page.kind === 'photoText') {
+    return (
+      <div className="nb-photo-text">
+        <PhotoFrame page={page} />
+        <div className="nb-photo-text__body">
+          <TextBlock page={page} />
+        </div>
+      </div>
+    )
+  }
+
+  if (page.kind === 'video') {
+    return <NotebookVideo page={page} isActive={isActive} />
+  }
+
+  if (page.kind === 'quotes') {
+    return (
+      <ul className="nb-scraps">
+        {page.quotes.map((quote) => (
+          <li key={quote} className="nb-scrap">
+            <span className="nb-scrap__text">{quote}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  if (page.kind === 'letter') {
+    return (
+      <div className="nb-letter">
+        <p className="nb-paper__eyebrow">{page.eyebrow}</p>
+
+        <button type="button" className="nb-letter__envelope" onClick={onOpenLetter}>
+          <span className="nb-letter__flap" aria-hidden="true" />
+          <span className="nb-letter__seal" aria-hidden="true">
+            {seal.mark}
+          </span>
+        </button>
+
+        <span className="nb-letter__hint">Chạm để cầm lá thư lên</span>
+      </div>
+    )
+  }
+
+  return <TextBlock page={page} />
 }
 
 export default PageContent

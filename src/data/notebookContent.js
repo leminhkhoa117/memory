@@ -69,10 +69,6 @@ const pages = [
     chapter: story.doubt.chapter,
     title: story.doubt.title,
     lines: story.doubt.lines,
-  },
-  {
-    id: 'do-du-ket',
-    kind: 'note',
     note: story.doubt.note,
   },
   {
@@ -88,6 +84,30 @@ const pages = [
     kind: 'letter',
     eyebrow: story.confession.chapter,
   },
+]
+
+// Trên sổ tay dọc chỉ có một trang mỗi lần nên hai đoạn đầu được gộp ảnh vào cùng chữ.
+const mobilePages = [
+  {
+    id: 'mo-dau',
+    kind: 'photoText',
+    eyebrow: story.intro.eyebrow,
+    title: story.intro.title,
+    lines: [story.intro.subtitle],
+    image: story.intro.background,
+    alt: 'Tấm ảnh mở đầu cuốn sổ',
+  },
+  {
+    id: 'lan-dau',
+    kind: 'photoText',
+    chapter: story.firstMeet.chapter,
+    eyebrow: story.firstMeet.date,
+    title: story.firstMeet.title,
+    lines: [story.firstMeet.body],
+    image: story.firstMeet.image,
+    alt: story.firstMeet.imageAlt,
+  },
+  ...pages.slice(4),
 ]
 
 const notebookContent = {
@@ -108,6 +128,8 @@ const notebookContent = {
     hint: 'Kéo mép trang để lật',
   },
   pages,
+  mobilePages,
+  letter: story.confession,
 }
 
 export default notebookContent

@@ -3,6 +3,8 @@
    ========================================================================== */
 
 .notebook {
+  --nb-hand: 'Patrick Hand', 'Segoe Print', cursive;
+  --nb-script: 'Dancing Script', cursive;
   position: fixed;
   inset: 0;
   z-index: 40;
@@ -63,17 +65,19 @@
 }
 
 /* Giấy kẻ ngang ngả vàng. */
-.nb-page--paper {
+.nb-page--paper,
+.pad-sheet {
   background:
     radial-gradient(circle at 24% 16%, rgba(212, 190, 152, 0.3), transparent 56%),
     linear-gradient(155deg, #f5eddc 0%, #ebe1ca 58%, #ded1b5 100%);
   box-shadow: inset 0 0 60px rgba(126, 106, 74, 0.24);
 }
 
-.nb-page--paper .nb-page__surface::before {
+.nb-page--paper .nb-page__surface::before,
+.pad-sheet::before {
   content: '';
   position: absolute;
-  inset: 9% 7% 12% 13%;
+  inset: 9% 8% 12%;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0 calc(27px * var(--nb-scale)),
@@ -82,7 +86,8 @@
   pointer-events: none;
 }
 
-.nb-page--paper .nb-page__surface::after {
+.nb-page--paper .nb-page__surface::after,
+.pad-sheet::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -92,32 +97,15 @@
   mix-blend-mode: multiply;
 }
 
-/* Lỗ đục gáy sổ. */
-.nb-paper__holes {
-  position: absolute;
-  top: 12%;
-  bottom: 12%;
-  left: 26px;
-  width: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  background-image: radial-gradient(circle, rgba(74, 64, 48, 0.55) 0 5px, transparent 5px);
-  background-size: 12px 19%;
-  background-repeat: repeat-y;
-  opacity: 0.5;
-}
-
 .nb-paper__margin {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 60px;
+  left: 42px;
   width: 1px;
-  background: rgba(163, 104, 96, 0.35);
+  background: rgba(163, 104, 96, 0.28);
 }
 
-/* Băng dán washi ở mép trên. */
 .nb-paper__body {
   position: relative;
   z-index: 2;
@@ -127,7 +115,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10% 10% 46px 18%;
+  padding: 9% 10% 44px 13%;
   color: #4d4132;
 }
 
@@ -136,31 +124,33 @@
   align-items: center;
   gap: 10px;
   margin: 0 0 14px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: clamp(8px, calc(11px * var(--nb-scale)), 11px);
-  letter-spacing: 0.32em;
+  font-family: var(--nb-hand);
+  font-size: clamp(9px, calc(13px * var(--nb-scale)), 13px);
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: rgba(94, 80, 58, 0.72);
 }
 
 .nb-paper__chapter {
-  font-family: 'Lora', serif;
-  font-size: clamp(11px, calc(15px * var(--nb-scale)), 15px);
-  letter-spacing: 0.1em;
-  color: rgba(140, 92, 84, 0.8);
+  font-family: var(--nb-script);
+  font-weight: 700;
+  font-size: clamp(12px, calc(17px * var(--nb-scale)), 17px);
+  letter-spacing: 0.08em;
+  color: rgba(140, 92, 84, 0.82);
 }
 
 .nb-paper__date {
   margin: -6px 0 14px;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(14px, calc(19px * var(--nb-scale)), 19px);
+  font-family: var(--nb-script);
+  font-weight: 600;
+  font-size: clamp(14px, calc(20px * var(--nb-scale)), 20px);
   color: rgba(140, 92, 84, 0.78);
 }
 
 .nb-paper__title {
   margin: 0 0 18px;
-  font-family: 'Caveat', cursive;
-  font-weight: 600;
+  font-family: var(--nb-script);
+  font-weight: 700;
   font-size: clamp(21px, calc(34px * var(--nb-scale)), 34px);
   line-height: 1.25;
   color: #3f3527;
@@ -168,14 +158,25 @@
 
 .nb-paper__note {
   margin: 0 0 12px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: clamp(10px, calc(15px * var(--nb-scale)), 15px);
-  line-height: 1.85;
-  color: rgba(77, 65, 50, 0.85);
+  font-family: var(--nb-hand);
+  font-size: clamp(12px, calc(19px * var(--nb-scale)), 19px);
+  line-height: 1.62;
+  color: rgba(70, 59, 45, 0.9);
 }
 
 .nb-paper__note:last-child {
   margin-bottom: 0;
+}
+
+.nb-paper__closing {
+  margin: 18px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(140, 92, 84, 0.32);
+  font-family: var(--nb-script);
+  font-weight: 600;
+  font-size: clamp(14px, calc(23px * var(--nb-scale)), 23px);
+  line-height: 1.42;
+  color: rgba(122, 80, 74, 0.92);
 }
 
 /* --------------------------------------------------------------------------
@@ -190,10 +191,11 @@
   text-align: center;
 }
 
+/* Trang ảnh gần như tràn giấy, chỉ chừa mép trắng cho khung. */
 .nb-paper__body--photo,
-.nb-paper__body--video {
-  padding-top: 6%;
-  padding-bottom: 46px;
+.nb-paper__body--video,
+.nb-paper__body--quotes {
+  padding: 6% 7% 44px;
 }
 
 .nb-media {
@@ -249,11 +251,11 @@
 
 .nb-photo__tape {
   position: absolute;
-  top: 8%;
+  top: -13px;
   left: 50%;
   z-index: 3;
-  width: 92px;
-  height: 28px;
+  width: 86px;
+  height: 26px;
   transform: translateX(-50%) rotate(-3deg);
   background: repeating-linear-gradient(
     108deg,
@@ -268,60 +270,128 @@
   align-items: baseline;
   justify-content: center;
   gap: 8px;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(14px, calc(20px * var(--nb-scale)), 20px);
+  font-family: var(--nb-script);
+  font-weight: 600;
+  font-size: clamp(14px, calc(21px * var(--nb-scale)), 21px);
   line-height: 1.4;
   color: rgba(77, 65, 50, 0.86);
 }
 
 .nb-media__index {
-  font-family: 'Lora', serif;
-  font-size: clamp(9px, calc(11px * var(--nb-scale)), 11px);
-  letter-spacing: 0.18em;
+  font-family: var(--nb-hand);
+  font-size: clamp(10px, calc(13px * var(--nb-scale)), 13px);
+  letter-spacing: 0.16em;
   color: rgba(140, 92, 84, 0.72);
 }
 
-.nb-quotes {
+/* Trang ảnh kèm chữ dùng cho sổ tay dọc. */
+.nb-photo-text {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16px * var(--nb-scale));
+  width: 100%;
+  min-height: 0;
+}
+
+.nb-photo-text .nb-photo__frame {
+  flex: 0 1 auto;
+  align-self: center;
+  width: 82%;
+  padding: 8px 8px 26px;
+}
+
+.nb-photo-text .nb-photo__frame img {
+  aspect-ratio: 5 / 4;
+}
+
+.nb-photo-text__body {
+  flex: 0 1 auto;
+  min-height: 0;
+  text-align: left;
+}
+
+/* --------------------------------------------------------------------------
+   Những mảnh giấy xé
+   -------------------------------------------------------------------------- */
+
+.nb-scraps {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  justify-content: center;
+  gap: calc(16px * var(--nb-scale));
+  width: 100%;
 }
 
-.nb-quotes__item {
+.nb-scrap {
   position: relative;
-  padding-left: 18px;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(14px, calc(21px * var(--nb-scale)), 21px);
-  line-height: 1.5;
-  color: rgba(63, 53, 39, 0.92);
+  padding: calc(16px * var(--nb-scale)) calc(20px * var(--nb-scale));
+  background: linear-gradient(148deg, #fdf8ec 0%, #f0e6d0 62%, #e4d8bd 100%);
+  filter: drop-shadow(0 6px 9px rgba(46, 38, 26, 0.3));
+  clip-path: polygon(
+    1% 7%,
+    12% 2%,
+    27% 6%,
+    44% 1%,
+    61% 6%,
+    78% 2%,
+    93% 7%,
+    99% 24%,
+    97% 52%,
+    99% 82%,
+    88% 97%,
+    71% 92%,
+    52% 98%,
+    33% 93%,
+    15% 99%,
+    3% 88%,
+    0% 62%,
+    2% 34%
+  );
 }
 
-.nb-quotes__item::before {
-  content: '';
-  position: absolute;
-  top: 0.7em;
-  left: 0;
-  width: 8px;
-  height: 1px;
-  background: rgba(140, 92, 84, 0.6);
+.nb-scrap:nth-child(odd) {
+  transform: rotate(-1.3deg);
+}
+
+.nb-scrap:nth-child(even) {
+  transform: rotate(1.1deg);
+  margin-left: 6%;
+}
+
+.nb-scrap__text {
+  display: block;
+  font-family: var(--nb-hand);
+  font-size: clamp(13px, calc(20px * var(--nb-scale)), 20px);
+  line-height: 1.5;
+  text-align: left;
+  color: rgba(63, 53, 39, 0.92);
 }
 
 .nb-standalone {
   margin: 0;
-  font-family: 'Caveat', cursive;
+  font-family: var(--nb-script);
+  font-weight: 600;
   font-size: clamp(17px, calc(30px * var(--nb-scale)), 30px);
   line-height: 1.5;
   color: rgba(63, 53, 39, 0.9);
 }
 
+/* --------------------------------------------------------------------------
+   Phong thư nằm trong sổ
+   -------------------------------------------------------------------------- */
+
 .nb-letter {
   display: flex;
+  flex: 1;
+  min-height: 0;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: calc(18px * var(--nb-scale));
+  width: 100%;
 }
 
 .nb-letter__envelope {
@@ -329,22 +399,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 78%;
-  max-width: 220px;
+  width: 100%;
+  max-width: 320px;
   aspect-ratio: 3 / 2;
+  border: 0;
   border-radius: 3px;
-  background: linear-gradient(160deg, #e6dcc3 0%, #d8ccae 100%);
+  padding: 0;
+  cursor: pointer;
+  background: linear-gradient(160deg, #e9dfc7 0%, #d6c9a9 100%);
   box-shadow:
     inset 0 0 0 1px rgba(120, 102, 74, 0.28),
-    0 10px 20px rgba(72, 60, 42, 0.22);
+    0 12px 24px rgba(72, 60, 42, 0.28);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-.nb-letter__envelope::before {
-  content: '';
+.nb-letter__envelope:hover,
+.nb-letter__envelope:focus-visible {
+  transform: translateY(-4px) rotate(-0.8deg);
+  box-shadow:
+    inset 0 0 0 1px rgba(120, 102, 74, 0.32),
+    0 18px 30px rgba(46, 38, 26, 0.36);
+}
+
+.nb-letter__flap {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom right,
+    transparent calc(50% - 1px),
+    rgba(120, 102, 74, 0.22) 50%,
+    transparent calc(50% + 1px)
+  );
+}
+
+.nb-letter__flap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom left,
     transparent calc(50% - 1px),
     rgba(120, 102, 74, 0.22) 50%,
     transparent calc(50% + 1px)
@@ -356,14 +449,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: calc(52px * var(--nb-scale));
+  height: calc(52px * var(--nb-scale));
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 50%;
   background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
   box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.38), 0 4px 10px rgba(0, 0, 0, 0.3);
   font-family: 'Lora', serif;
-  font-size: 0.85rem;
+  font-size: clamp(0.7rem, calc(0.95rem * var(--nb-scale)), 0.95rem);
   color: rgba(255, 231, 216, 0.86);
+}
+
+.nb-letter__hint {
+  font-family: var(--nb-hand);
+  font-size: clamp(11px, calc(16px * var(--nb-scale)), 16px);
+  letter-spacing: 0.06em;
+  color: rgba(94, 80, 58, 0.6);
 }
 
 .nb-paper__number {
@@ -371,30 +473,108 @@
   right: 26px;
   bottom: 18px;
   z-index: 2;
-  font-family: 'Caveat', cursive;
+  font-family: var(--nb-hand);
   font-size: clamp(12px, calc(17px * var(--nb-scale)), 17px);
   color: rgba(94, 80, 58, 0.5);
 }
 
 /* Khi mở hai trang, trang bên trái phải có gáy nằm ở mép phải. */
-.notebook[data-portrait='false'] .nb-page--left .nb-paper__holes {
-  left: auto;
-  right: 26px;
-}
-
 .notebook[data-portrait='false'] .nb-page--left .nb-paper__margin {
   left: auto;
-  right: 60px;
+  right: 42px;
 }
 
 .notebook[data-portrait='false'] .nb-page--left .nb-paper__body {
   padding-left: 10%;
-  padding-right: 18%;
+  padding-right: 13%;
+}
+
+.notebook[data-portrait='false'] .nb-page--left .nb-paper__body--photo,
+.notebook[data-portrait='false'] .nb-page--left .nb-paper__body--video,
+.notebook[data-portrait='false'] .nb-page--left .nb-paper__body--quotes {
+  padding-left: 7%;
+  padding-right: 7%;
 }
 
 .notebook[data-portrait='false'] .nb-page--left .nb-paper__number {
   right: auto;
   left: 26px;
+}
+
+/* --------------------------------------------------------------------------
+   Sổ tay lật dọc trên điện thoại
+   -------------------------------------------------------------------------- */
+
+.pad {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  height: 100%;
+  margin: 0 auto;
+  padding-top: 16px;
+  display: flex;
+  touch-action: pan-y;
+}
+
+.pad__board {
+  position: absolute;
+  inset: 8px -10px -12px;
+  border-radius: 6px;
+  background: linear-gradient(158deg, #5d5341 0%, #443b30 52%, #2c2721 100%);
+  box-shadow: 0 20px 34px rgba(0, 0, 0, 0.52);
+}
+
+.pad__stage {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  perspective: 1500px;
+  overflow: hidden;
+}
+
+.pad-sheet {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  flex-direction: column;
+  color: #4d4132;
+}
+
+.pad__rings {
+  position: absolute;
+  top: 2px;
+  left: 4%;
+  right: 4%;
+  z-index: 40;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.pad__ring {
+  width: 11px;
+  height: 28px;
+  border-radius: 6px;
+  border: 3px solid #b3ac9e;
+  border-top-color: #e9e3d4;
+  border-bottom-color: #77716a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.notebook[data-mode='pad'] .nb-paper__body {
+  padding: 12% 9% 40px;
+}
+
+.notebook[data-mode='pad'] .nb-paper__body--photo,
+.notebook[data-mode='pad'] .nb-paper__body--video,
+.notebook[data-mode='pad'] .nb-paper__body--quotes,
+.notebook[data-mode='pad'] .nb-paper__body--photoText {
+  padding: 12% 6% 40px;
 }
 
 /* --------------------------------------------------------------------------
@@ -461,22 +641,6 @@
   font-size: clamp(0.95rem, 3vmin, 1.2rem);
   line-height: 1.6;
   color: rgba(238, 226, 201, 0.9);
-}
-
-.nb-cover__footnote {
-  position: relative;
-  margin: 18px 0 0;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(0.95rem, 2.8vmin, 1.15rem);
-  color: rgba(214, 195, 160, 0.66);
-}
-
-.nb-cover__closing {
-  position: relative;
-  margin: 0;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(1.5rem, 5vmin, 2rem);
-  color: rgba(240, 226, 196, 0.82);
 }
 
 .nb-cover__seal {
@@ -568,20 +732,212 @@
   transform: translateX(-50%);
   margin: 0;
   z-index: 3;
-  font-family: 'Caveat', cursive;
+  font-family: var(--nb-hand);
   font-size: 1.05rem;
   color: rgba(226, 214, 189, 0.5);
   pointer-events: none;
 }
 
-@media (max-width: 720px) {
-  .notebook {
-    padding: 16px 10px 14px;
-    gap: 12px;
-  }
+/* --------------------------------------------------------------------------
+   Lá thư được cầm lên khỏi cuốn sổ
+   -------------------------------------------------------------------------- */
 
-  .nb-paper__body {
-    padding: 14% 9% 14% 20%;
+.letter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.letter-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(48, 40, 30, 0.72), rgba(12, 10, 8, 0.94) 72%);
+  backdrop-filter: blur(7px);
+}
+
+.letter-overlay__close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(233, 214, 178, 0.24);
+  border-radius: 50%;
+  background: rgba(24, 21, 18, 0.5);
+  color: rgba(233, 220, 194, 0.8);
+  cursor: pointer;
+}
+
+.letter-item {
+  position: relative;
+  z-index: 2;
+  width: min(360px, 78vw);
+  aspect-ratio: 3 / 2;
+  transform-style: preserve-3d;
+}
+
+.letter-envelope__back {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(160deg, #e2d7bd 0%, #cec0a0 100%);
+  box-shadow: 0 26px 48px rgba(0, 0, 0, 0.6);
+}
+
+.letter-envelope__flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  transform-origin: top center;
+  backface-visibility: hidden;
+  background: linear-gradient(180deg, #e7ddc4 0%, #d3c6a6 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  box-shadow: 0 6px 12px rgba(60, 48, 34, 0.28);
+}
+
+.letter-envelope {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.letter-envelope:disabled {
+  cursor: default;
+}
+
+.letter-envelope__pocket {
+  position: absolute;
+  inset: 42% 0 0;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(170deg, #ded2b6 0%, #cabb99 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 -6px 16px rgba(60, 48, 34, 0.22);
+  clip-path: polygon(0 12%, 50% 0, 100% 12%, 100% 100%, 0 100%);
+}
+
+.letter-envelope__seal {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 24%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
+  box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.42);
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  color: rgba(255, 231, 216, 0.88);
+}
+
+.letter-sheet {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 210;
+  width: min(430px, 86vw);
+  max-height: 78vh;
+  overflow-y: auto;
+  padding: 30px 28px 34px;
+  transform-origin: bottom center;
+  text-align: left;
+  background:
+    radial-gradient(circle at 22% 12%, rgba(212, 190, 152, 0.24), transparent 58%),
+    linear-gradient(155deg, #f8f1e0 0%, #efe5cd 60%, #e3d7ba 100%);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
+}
+
+.letter-sheet__chapter {
+  margin: 0 0 18px;
+  font-family: var(--nb-hand, 'Patrick Hand', cursive);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(140, 92, 84, 0.72);
+}
+
+.letter-sheet__line {
+  position: relative;
+  margin: 0 0 14px;
+  font-family: var(--nb-hand, 'Patrick Hand', cursive);
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  line-height: 1.66;
+  color: rgba(63, 53, 39, 0.94);
+}
+
+.letter-sheet__ghost {
+  visibility: hidden;
+}
+
+.letter-sheet__typed {
+  position: absolute;
+  inset: 0;
+}
+
+.letter-sheet__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.16em;
+  background: rgba(140, 92, 84, 0.8);
+  animation: letter-caret 0.9s steps(1) infinite;
+}
+
+@keyframes letter-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.letter-sheet__closing {
+  margin: 22px 0 0;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(140, 92, 84, 0.34);
+  font-family: var(--nb-script, 'Dancing Script', cursive);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 4vw, 1.35rem);
+  line-height: 1.45;
+  color: rgba(122, 80, 74, 0.92);
+}
+
+.letter-item__hint {
+  position: absolute;
+  left: 50%;
+  bottom: -46px;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--nb-hand, 'Patrick Hand', cursive);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: rgba(226, 214, 189, 0.6);
+}
+
+@media (max-width: 760px) {
+  .notebook {
+    padding: 18px 12px 14px;
+    gap: 12px;
   }
 
   .notebook__hint {

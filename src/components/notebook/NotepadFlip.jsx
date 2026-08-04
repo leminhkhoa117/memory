@@ -68,7 +68,7 @@ function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
                 zIndex: pageIndex === flippingIndex ? 900 : isFlipped ? 500 + pageIndex : 400 - pageIndex,
               }}
               initial={false}
-              animate={{ rotateX: isFlipped ? -168 : 0 }}
+              animate={{ rotateX: isFlipped ? 168 : 0 }}
               transition={{
                 duration: shouldReduceMotion ? 0 : FLIP_DURATION / 1000,
                 ease: [0.33, 1, 0.68, 1],

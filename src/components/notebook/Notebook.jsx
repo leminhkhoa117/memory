@@ -1,7 +1,7 @@
 import HTMLFlipBook from 'react-pageflip'
 import { AnimatePresence, motion as Motion } from 'framer-motion'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useNotebookSize } from '../../hooks/useNotebookSize'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
@@ -12,11 +12,12 @@ import LetterOverlay from './LetterOverlay'
 import '../../styles/notebook.css'
 
 const HINT_DURATION = 6000
+const PAD_COVER = { id: 'bia-so-tay', kind: 'cover' }
 
 function Notebook({ content, seal }) {
   const bookRef = useRef(null)
   const stageRef = useRef(null)
-  const [pageIndex, setPageIndex] = useState(1)
+  const [pageIndex, setPageIndex] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [padIndex, setPadIndex] = useState(0)
   const [isHintVisible, setIsHintVisible] = useState(true)
@@ -26,10 +27,11 @@ function Notebook({ content, seal }) {
   const size = useNotebookSize(stageRef)
 
   // Đổi kích thước sẽ dựng lại cuốn sổ, nên phải nhớ trang đang đọc để mở lại đúng chỗ.
-  const pageIndexRef = useRef(1)
+  const pageIndexRef = useRef(0)
   pageIndexRef.current = pageIndex
 
-  const pages = isPad ? content.mobilePages : content.pages
+  const padSheets = useMemo(() => [PAD_COVER, ...content.mobilePages], [content.mobilePages])
+  const pages = isPad ? padSheets : content.pages
 
   const getFlip = useCallback(() => bookRef.current?.pageFlip?.() ?? null, [])
 
@@ -123,10 +125,39 @@ function Notebook({ content, seal }) {
     >
       <span className="notebook__desk" aria-hidden="true" />
 
+      {/* Bộ lọc làm nhoè viền để mảnh giấy trông như bị xé tay. */}
+      <svg className="nb-defs" aria-hidden="true" focusable="false">
+        <defs>
+          {[
+            { id: 'nb-torn-1', seed: 3, frequency: '0.024 0.05', scale: 13 },
+            { id: 'nb-torn-2', seed: 17, frequency: '0.03 0.06', scale: 11 },
+            { id: 'nb-torn-3', seed: 42, frequency: '0.021 0.044', scale: 15 },
+          ].map((torn) => (
+            <filter key={torn.id} id={torn.id} x="-12%" y="-14%" width="124%" height="128%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency={torn.frequency}
+                numOctaves="4"
+                seed={torn.seed}
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale={torn.scale}
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+          ))}
+        </defs>
+      </svg>
+
       <div className="notebook__stage" ref={stageRef}>
         {isPad ? (
           <NotepadFlip
-            pages={pages}
+            pages={padSheets}
+            cover={content.cover}
             seal={seal}
             index={padIndex}
             onChange={handlePadChange}

@@ -108,8 +108,11 @@ function PageContent({ page, seal, isActive, onOpenLetter }) {
   if (page.kind === 'quotes') {
     return (
       <ul className="nb-scraps">
-        {page.quotes.map((quote) => (
-          <li key={quote} className="nb-scrap">
+        {page.quotes.map((quote, index) => (
+          <li key={quote} className="nb-scrap" data-torn={(index % 3) + 1}>
+            <span className="nb-scrap__paper" aria-hidden="true" />
+            <span className="nb-scrap__tape nb-scrap__tape--start" aria-hidden="true" />
+            <span className="nb-scrap__tape nb-scrap__tape--end" aria-hidden="true" />
             <span className="nb-scrap__text">{quote}</span>
           </li>
         ))}

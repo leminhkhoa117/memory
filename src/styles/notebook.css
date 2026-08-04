@@ -31,6 +31,13 @@
   box-shadow: inset 0 0 200px rgba(12, 10, 8, 0.72);
 }
 
+.nb-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
 .notebook__stage {
   position: relative;
   z-index: 2;
@@ -316,58 +323,110 @@
 
 .nb-scraps {
   margin: 0;
-  padding: 0;
+  padding: 12px 14px;
   list-style: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: calc(16px * var(--nb-scale));
+  gap: calc(18px * var(--nb-scale));
   width: 100%;
 }
 
 .nb-scrap {
   position: relative;
-  padding: calc(16px * var(--nb-scale)) calc(20px * var(--nb-scale));
-  background: linear-gradient(148deg, #fdf8ec 0%, #f0e6d0 62%, #e4d8bd 100%);
-  filter: drop-shadow(0 6px 9px rgba(46, 38, 26, 0.3));
-  clip-path: polygon(
-    1% 7%,
-    12% 2%,
-    27% 6%,
-    44% 1%,
-    61% 6%,
-    78% 2%,
-    93% 7%,
-    99% 24%,
-    97% 52%,
-    99% 82%,
-    88% 97%,
-    71% 92%,
-    52% 98%,
-    33% 93%,
-    15% 99%,
-    3% 88%,
-    0% 62%,
-    2% 34%
-  );
+  padding: calc(18px * var(--nb-scale)) calc(22px * var(--nb-scale));
 }
 
 .nb-scrap:nth-child(odd) {
-  transform: rotate(-1.3deg);
+  transform: rotate(-1.4deg);
+  margin-right: 5%;
 }
 
 .nb-scrap:nth-child(even) {
-  transform: rotate(1.1deg);
-  margin-left: 6%;
+  transform: rotate(1.2deg);
+  margin-left: 7%;
+}
+
+/* Lớp giấy được đẩy méo bằng feDisplacementMap nên chỉ chứa nền, chữ nằm ở lớp trên. */
+.nb-scrap__paper {
+  position: absolute;
+  inset: -5px;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 252, 243, 0.9), transparent 52%),
+    linear-gradient(146deg, #fbf5e6 0%, #f2e9d4 58%, #e6dabc 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 253, 246, 0.75),
+    inset 0 0 16px rgba(150, 128, 94, 0.26);
+  filter: url(#nb-torn-1) drop-shadow(0 4px 5px rgba(46, 38, 26, 0.36));
+}
+
+.nb-scrap[data-torn='2'] .nb-scrap__paper {
+  filter: url(#nb-torn-2) drop-shadow(0 4px 5px rgba(46, 38, 26, 0.36));
+}
+
+.nb-scrap[data-torn='3'] .nb-scrap__paper {
+  filter: url(#nb-torn-3) drop-shadow(0 4px 5px rgba(46, 38, 26, 0.36));
+}
+
+/* Sợi giấy trắng lởm chởm dọc mép xé. */
+.nb-scrap__paper::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.nb-scrap__tape {
+  position: absolute;
+  z-index: 3;
+  width: calc(66px * var(--nb-scale));
+  min-width: 46px;
+  height: calc(23px * var(--nb-scale));
+  min-height: 17px;
+  background: linear-gradient(
+    176deg,
+    rgba(240, 231, 208, 0.78) 0%,
+    rgba(219, 206, 176, 0.66) 48%,
+    rgba(236, 226, 202, 0.74) 100%
+  );
+  box-shadow:
+    0 1px 3px rgba(72, 60, 42, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.nb-scrap__tape::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    94deg,
+    rgba(255, 255, 255, 0.2) 0 5px,
+    rgba(255, 255, 255, 0) 5px 11px
+  );
+}
+
+.nb-scrap__tape--start {
+  top: calc(-10px * var(--nb-scale));
+  left: 9%;
+  transform: rotate(-7deg);
+}
+
+.nb-scrap__tape--end {
+  bottom: calc(-9px * var(--nb-scale));
+  right: 12%;
+  transform: rotate(5deg);
 }
 
 .nb-scrap__text {
+  position: relative;
+  z-index: 2;
   display: block;
   font-family: var(--nb-hand);
   font-size: clamp(13px, calc(20px * var(--nb-scale)), 20px);
   line-height: 1.5;
   text-align: left;
-  color: rgba(63, 53, 39, 0.92);
+  color: rgba(58, 48, 35, 0.94);
 }
 
 .nb-standalone {
@@ -564,6 +623,37 @@
   border-top-color: #e9e3d4;
   border-bottom-color: #77716a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.pad-sheet--cover {
+  background: linear-gradient(152deg, #6d5e47 0%, #55483a 48%, #3b332b 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(233, 214, 178, 0.16),
+    inset 0 0 44px rgba(0, 0, 0, 0.45);
+}
+
+.pad-sheet--cover::before,
+.pad-sheet--cover::after {
+  content: none;
+}
+
+.pad-cover {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16% 12%;
+  text-align: center;
+}
+
+.pad-cover::before {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(233, 214, 178, 0.22);
+  pointer-events: none;
 }
 
 .notebook[data-mode='pad'] .nb-paper__body {

@@ -8,7 +8,7 @@ const SWIPE_THRESHOLD = 46
 const RING_COUNT = 11
 
 /** Sổ tay lật từ dưới lên: mỗi tờ xoay quanh mép trên, đúng kiểu sổ lò xo cầm tay. */
-function NotepadFlip({ pages, seal, index, onChange, onOpenLetter }) {
+function NotepadFlip({ pages, cover, seal, index, onChange, onOpenLetter }) {
   const [flippingIndex, setFlippingIndex] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const startRef = useRef(null)
@@ -61,7 +61,7 @@ function NotepadFlip({ pages, seal, index, onChange, onOpenLetter }) {
           return (
             <Motion.div
               key={page.id}
-              className="pad-sheet"
+              className={`pad-sheet${page.kind === 'cover' ? ' pad-sheet--cover' : ''}`}
               style={{
                 display: isNear ? 'flex' : 'none',
                 zIndex: pageIndex === flippingIndex ? 900 : isFlipped ? 500 + pageIndex : 400 - pageIndex,
@@ -73,16 +73,30 @@ function NotepadFlip({ pages, seal, index, onChange, onOpenLetter }) {
                 ease: [0.33, 1, 0.68, 1],
               }}
             >
-              <div className={`nb-paper__body nb-paper__body--${page.kind}`}>
-                <PageContent
-                  page={page}
-                  seal={seal}
-                  isActive={pageIndex === index}
-                  onOpenLetter={onOpenLetter}
-                />
-              </div>
+              {page.kind === 'cover' ? (
+                <div className="pad-cover">
+                  <span className="nb-cover__ribbon" aria-hidden="true" />
+                  <p className="nb-cover__eyebrow">{cover.eyebrow}</p>
+                  <p className="nb-cover__stamp">{cover.stamp}</p>
+                  <h2 className="nb-cover__title">{cover.title}</h2>
+                  <span className="nb-cover__seal" aria-hidden="true">
+                    <span className="nb-cover__seal-mark">{seal.mark}</span>
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div className={`nb-paper__body nb-paper__body--${page.kind}`}>
+                    <PageContent
+                      page={page}
+                      seal={seal}
+                      isActive={pageIndex === index}
+                      onOpenLetter={onOpenLetter}
+                    />
+                  </div>
 
-              <span className="nb-paper__number">{String(pageIndex + 1).padStart(2, '0')}</span>
+                  <span className="nb-paper__number">{String(pageIndex).padStart(2, '0')}</span>
+                </>
+              )}
             </Motion.div>
           )
         })}

@@ -76,14 +76,14 @@ export const story = {
     chapter: 'Một thước phim anh luôn giữ',
     src: memoryVideo,
     poster: secondPhoto,
-    caption: 'anh thực sự yêu khoảnh khắc này',
+    caption: 'Anh thực sự yêu khoảnh khắc này',
   },
   confession: {
-    chapter: 'Anh muốn nói là',
+    chapter: 'Những gì anh muốn nói đều gói gọn ở đây.',
     lines: [
       'Anh thật sự thích em.',
       'Liệu em có thể cho anh một cơ hội được tìm hiểu em một cách nghiêm túc không? Hãy nhắn cho anh nếu em đồng ý.',
-      'Nếu em không đồng ý thì không cần nhắn gì cả, hãy cứ phớt lờ nó đi. Anh sẽ hiểu đó là lời từ chối, và luôn tôn trọng cảm xúc của em.',
+      'Nếu em không đồng ý thì có thể giữ im lặng. Anh sẽ hiểu đó là lời từ chối, và luôn tôn trọng cảm xúc của em.',
     ],
     closing: 'Cảm ơn em đã dành thời gian xem đến tận đây, đó là tất cả những gì anh muốn nói.',
   },

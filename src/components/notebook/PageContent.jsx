@@ -25,12 +25,12 @@ function NotebookVideo({ page, isActive }) {
       <div className="nb-video__frame">
         <video
           ref={videoRef}
-          src={page.src}
+          src={isActive ? page.src : undefined}
           poster={page.poster}
           muted
           playsInline
           loop
-          preload="metadata"
+          preload={isActive ? 'metadata' : 'none'}
           aria-label="Một khoảnh khắc đáng nhớ của hai chúng ta"
         />
       </div>
@@ -40,12 +40,22 @@ function NotebookVideo({ page, isActive }) {
   )
 }
 
-function PhotoFrame({ page }) {
+function PhotoFrame({ page, onOpenPhoto, shouldLoad }) {
   return (
-    <div className="nb-photo__frame">
+    <button
+      type="button"
+      className="nb-photo__frame nb-photo__button"
+      onClick={(event) => onOpenPhoto?.(event, page)}
+      aria-label={`Mở lớn: ${page.alt}`}
+    >
       <span className="nb-photo__tape" aria-hidden="true" />
-      <img src={page.image} alt={page.alt} loading="lazy" />
-    </div>
+      <img
+        src={shouldLoad ? page.image : undefined}
+        alt={page.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </button>
   )
 }
 
@@ -75,11 +85,11 @@ function TextBlock({ page }) {
   )
 }
 
-function PageContent({ page, isActive, onOpenLetter }) {
+function PageContent({ page, isActive, shouldLoad = true, onOpenLetter, onOpenPhoto }) {
   if (page.kind === 'photo') {
     return (
       <figure className="nb-media nb-photo">
-        <PhotoFrame page={page} />
+        <PhotoFrame page={page} onOpenPhoto={onOpenPhoto} shouldLoad={shouldLoad} />
 
         {page.caption && (
           <figcaption className="nb-media__caption">
@@ -94,7 +104,7 @@ function PageContent({ page, isActive, onOpenLetter }) {
   if (page.kind === 'photoText') {
     return (
       <div className="nb-photo-text">
-        <PhotoFrame page={page} />
+        <PhotoFrame page={page} onOpenPhoto={onOpenPhoto} shouldLoad={shouldLoad} />
         <div className="nb-photo-text__body">
           <TextBlock page={page} />
         </div>

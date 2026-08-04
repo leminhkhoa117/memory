@@ -1,4 +1,5 @@
 import { AnimatePresence, motion as Motion } from 'framer-motion'
+import { PhoneCall } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import puzzleContent from '../../data/puzzleContent'
 import { DIGITS, KEEPSAKES, KEEPSAKE_MAP, STAGE } from '../../data/keepsakes'
@@ -31,6 +32,7 @@ function PuzzleGame({ onComplete }) {
   const [metrics, setMetrics] = useState({ width: 0, height: 0, unit: 1 })
   const [hintItemId, setHintItemId] = useState(null)
   const [isLeaving, setIsLeaving] = useState(false)
+  const [isDialOpen, setIsDialOpen] = useState(true)
   const hintTimerRef = useRef(null)
 
   const sound = usePuzzleSound()
@@ -226,15 +228,15 @@ function PuzzleGame({ onComplete }) {
         <HintButton label={puzzleContent.hintButtonLabel} onClick={revealHint} />
       )}
 
-      <AnimatePresence>
-        {engine.phase === 'dial' && (
+      {engine.phase === 'dial' && (
+        <>
           <Motion.div
             className="rotary-layer"
-            key="dial"
             initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
+            animate={{ opacity: isDialOpen ? 1 : 0, y: isDialOpen ? 0 : 18 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            style={{ pointerEvents: isDialOpen ? 'auto' : 'none' }}
+            aria-hidden={!isDialOpen}
           >
             <RotaryDial
               label={puzzleContent.dialLabel}
@@ -242,14 +244,32 @@ function PuzzleGame({ onComplete }) {
               answer={puzzleContent.answer}
               onTick={sound.playTick}
               onError={sound.playError}
+              onClose={() => setIsDialOpen(false)}
               onSolved={() => {
                 sound.playReveal()
                 engine.completeDial()
               }}
             />
           </Motion.div>
-        )}
-      </AnimatePresence>
+
+          <AnimatePresence>
+            {!isDialOpen && (
+              <Motion.button
+                type="button"
+                className="rotary-reopen"
+                onClick={() => setIsDialOpen(true)}
+                aria-label="Mở lại bàn quay số"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+              >
+                <PhoneCall size={18} strokeWidth={1.7} />
+                <span>Mở bàn quay số</span>
+              </Motion.button>
+            )}
+          </AnimatePresence>
+        </>
+      )}
 
       <AnimatePresence>
         {engine.phase === 'success' && (
@@ -257,6 +277,7 @@ function PuzzleGame({ onComplete }) {
             key="success"
             title={puzzleContent.successTitle}
             line={puzzleContent.successLine}
+            prompt={puzzleContent.successPrompt}
             cta={puzzleContent.cta}
             onContinue={() => {
               setIsLeaving(true)

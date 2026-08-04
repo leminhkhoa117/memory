@@ -1,19 +1,25 @@
 import { motion as Motion } from 'framer-motion'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import PageContent from './PageContent'
 import WaxSeal from './WaxSeal'
 
-const FLIP_DURATION = 720
+const FLIP_DURATION = 1100
+const FLIP_EASE = [0.45, 0, 0.55, 1]
+const FLIP_BACK_EASE = [0.22, 1, 0.36, 1]
 const SWIPE_THRESHOLD = 46
 const RING_COUNT = 11
 
 /** Sổ tay lật từ dưới lên: mỗi tờ xoay quanh mép trên, đúng kiểu sổ lò xo cầm tay. */
-function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
+const NotepadFlip = forwardRef(function NotepadFlip(
+  { pages, cover, index, onChange, onOpenLetter, onOpenPhoto },
+  ref,
+) {
   const [flippingIndex, setFlippingIndex] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const startRef = useRef(null)
   const timerRef = useRef(null)
+  const isFlippingBack = flippingIndex === index
 
   useEffect(() => () => window.clearTimeout(timerRef.current), [])
 
@@ -29,6 +35,15 @@ function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
       timerRef.current = window.setTimeout(() => setFlippingIndex(null), FLIP_DURATION)
     },
     [index, onChange, pages.length],
+  )
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      flipPrev: () => go(index - 1),
+      flipNext: () => go(index + 1),
+    }),
+    [go, index],
   )
 
   const handlePointerDown = (event) => {
@@ -71,7 +86,7 @@ function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
               animate={{ rotateX: isFlipped ? 168 : 0 }}
               transition={{
                 duration: shouldReduceMotion ? 0 : FLIP_DURATION / 1000,
-                ease: [0.33, 1, 0.68, 1],
+                ease: isFlippingBack ? FLIP_BACK_EASE : FLIP_EASE,
               }}
             >
               {page.kind === 'cover' ? (
@@ -88,7 +103,9 @@ function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
                     <PageContent
                       page={page}
                       isActive={pageIndex === index}
+                      shouldLoad={isNear}
                       onOpenLetter={onOpenLetter}
+                      onOpenPhoto={onOpenPhoto}
                     />
                   </div>
 
@@ -107,6 +124,6 @@ function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
       </span>
     </div>
   )
-}
+})
 
 export default NotepadFlip

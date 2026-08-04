@@ -3,8 +3,12 @@ const firstPhoto = new URL('../image/1000001736.jpg', import.meta.url).href
 const secondPhoto = new URL('../image/1000001738.jpg', import.meta.url).href
 const thirdPhoto = new URL('../image/1000001739.jpg', import.meta.url).href
 const memoryVideo = new URL('../image/lv_0_20260620105157.mp4', import.meta.url).href
-const backgroundMusic = new URL(
+const notebookMusic = new URL(
   '../music/lokenwarrior-river-romance-482803.mp3',
+  import.meta.url,
+).href
+const gameMusic = new URL(
+  '../music/the_mountain-france-romance-375982.mp3',
   import.meta.url,
 ).href
 
@@ -88,15 +92,15 @@ export const story = {
     closing: 'Cảm ơn em đã dành thời gian xem đến tận đây, đó là tất cả những gì anh muốn nói.',
   },
   music: {
-    src: backgroundMusic,
-    label: 'Nhạc nền River Romance',
+    game: {
+      src: gameMusic,
+      label: 'Nhạc nền The Mountain',
+    },
+    notebook: {
+      src: notebookMusic,
+      label: 'Nhạc nền River Romance',
+    },
   },
 }
 
-export const preloadAssets = [
-  introPhoto,
-  firstPhoto,
-  secondPhoto,
-  thirdPhoto,
-  story.video.src,
-]
+export const preloadAssets = []

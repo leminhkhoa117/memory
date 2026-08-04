@@ -1,13 +1,14 @@
 import { AnimatePresence } from 'framer-motion'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { story, preloadAssets } from './content'
 import puzzleContent from './data/puzzleContent'
 import notebookContent from './data/notebookContent'
 import LoadingScreen from './components/LoadingScreen'
 import MusicToggle from './components/MusicToggle'
 import StartScreen from './components/start/StartScreen'
-import PuzzleGame from './components/puzzle/PuzzleGame'
-import Notebook from './components/notebook/Notebook'
+
+const PuzzleGame = lazy(() => import('./components/puzzle/PuzzleGame'))
+const Notebook = lazy(() => import('./components/notebook/Notebook'))
 
 const STAGE = {
   loading: 'loading',
@@ -34,6 +35,7 @@ function App() {
   const [isStartMounted, setIsStartMounted] = useState(INITIAL_STAGE === STAGE.start)
   const [isPuzzleMounted, setIsPuzzleMounted] = useState(INITIAL_STAGE === STAGE.puzzle)
   const timersRef = useRef([])
+  const music = stage === STAGE.notebook ? story.music.notebook : story.music.game
 
   useEffect(() => {
     const timers = timersRef.current
@@ -69,15 +71,17 @@ function App() {
         )}
       </AnimatePresence>
 
-      {isPuzzleMounted && <PuzzleGame onComplete={handlePuzzleComplete} />}
+      <Suspense fallback={null}>
+        {isPuzzleMounted && <PuzzleGame onComplete={handlePuzzleComplete} />}
+      </Suspense>
 
       {isStartMounted && <StartScreen content={puzzleContent.intro} onStart={handleStart} />}
 
-      {stage === STAGE.notebook && (
-        <Notebook content={notebookContent} />
-      )}
+      <Suspense fallback={null}>
+        {stage === STAGE.notebook && <Notebook content={notebookContent} />}
+      </Suspense>
 
-      <MusicToggle content={story.music} />
+      <MusicToggle content={music} />
     </>
   )
 }

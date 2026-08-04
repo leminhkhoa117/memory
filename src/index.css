@@ -27,14 +27,20 @@
 html {
   background: #110d0f;
   scroll-behavior: auto;
+  overscroll-behavior: none;
 }
 
 body {
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   overflow-x: hidden;
+  overscroll-behavior: none;
   background: #110d0f;
+}
+
+#root {
+  min-height: 100dvh;
 }
 
 body,

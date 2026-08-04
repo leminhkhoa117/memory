@@ -9,6 +9,7 @@ import NotebookPage from './NotebookPage'
 import NotepadFlip from './NotepadFlip'
 import PageContent from './PageContent'
 import LetterOverlay from './LetterOverlay'
+import PhotoOverlay from './PhotoOverlay'
 import WaxSeal from './WaxSeal'
 import '../../styles/notebook.css'
 
@@ -17,12 +18,14 @@ const PAD_COVER = { id: 'bia-so-tay', kind: 'cover' }
 
 function Notebook({ content }) {
   const bookRef = useRef(null)
+  const padRef = useRef(null)
   const stageRef = useRef(null)
   const [pageIndex, setPageIndex] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [padIndex, setPadIndex] = useState(0)
   const [isHintVisible, setIsHintVisible] = useState(true)
   const [letterOrigin, setLetterOrigin] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const isPad = useMediaQuery('(max-width: 760px)')
   const size = useNotebookSize(stageRef)
@@ -38,7 +41,7 @@ function Notebook({ content }) {
 
   const goPrev = useCallback(() => {
     if (isPad) {
-      setPadIndex((current) => Math.max(current - 1, 0))
+      padRef.current?.flipPrev()
       return
     }
     getFlip()?.flipPrev()
@@ -46,11 +49,11 @@ function Notebook({ content }) {
 
   const goNext = useCallback(() => {
     if (isPad) {
-      setPadIndex((current) => Math.min(current + 1, pages.length - 1))
+      padRef.current?.flipNext()
       return
     }
     getFlip()?.flipNext()
-  }, [getFlip, isPad, pages.length])
+  }, [getFlip, isPad])
 
   const handleOpenLetter = useCallback((event) => {
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -63,6 +66,23 @@ function Notebook({ content }) {
   }, [])
 
   const closeLetter = useCallback(() => setLetterOrigin(null), [])
+
+  const handleOpenPhoto = useCallback((event, page) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    setPhotoPreview({
+      image: page.image,
+      alt: page.alt,
+      caption: page.caption,
+      origin: {
+        top: bounds.top,
+        left: bounds.left,
+        width: bounds.width,
+        height: bounds.height,
+      },
+    })
+  }, [])
+
+  const closePhoto = useCallback(() => setPhotoPreview(null), [])
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -79,7 +99,7 @@ function Notebook({ content }) {
 
   useEffect(() => {
     const handleKey = (event) => {
-      if (letterOrigin) {
+      if (letterOrigin || photoPreview) {
         return
       }
 
@@ -92,7 +112,7 @@ function Notebook({ content }) {
 
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [goPrev, goNext, letterOrigin])
+  }, [goPrev, goNext, letterOrigin, photoPreview])
 
   const handleInit = useCallback((event) => {
     setTotalPages(event.object.getPageCount())
@@ -157,11 +177,13 @@ function Notebook({ content }) {
       <div className="notebook__stage" ref={stageRef}>
         {isPad ? (
           <NotepadFlip
+            ref={padRef}
             pages={padSheets}
             cover={content.cover}
             index={padIndex}
             onChange={handlePadChange}
             onOpenLetter={handleOpenLetter}
+            onOpenPhoto={handleOpenPhoto}
           />
         ) : (
           size && (
@@ -198,13 +220,20 @@ function Notebook({ content }) {
                 const bookIndex = index + 1
                 const isActive =
                   bookIndex === pageIndex || (!size.isPortrait && bookIndex === pageIndex + 1)
+                const shouldLoad = Math.abs(bookIndex - pageIndex) <= 2
 
                 return (
                   <NotebookPage key={page.id} side={index % 2 === 0 ? 'left' : 'right'}>
                     <span className="nb-paper__margin" aria-hidden="true" />
 
                     <div className={`nb-paper__body nb-paper__body--${page.kind}`}>
-                      <PageContent page={page} isActive={isActive} onOpenLetter={handleOpenLetter} />
+                      <PageContent
+                        page={page}
+                        isActive={isActive}
+                        shouldLoad={shouldLoad}
+                        onOpenLetter={handleOpenLetter}
+                        onOpenPhoto={handleOpenPhoto}
+                      />
                     </div>
 
                     <span className="nb-paper__number">{String(bookIndex).padStart(2, '0')}</span>
@@ -271,6 +300,9 @@ function Notebook({ content }) {
             origin={letterOrigin}
             onClose={closeLetter}
           />
+        )}
+        {photoPreview && (
+          <PhotoOverlay key="photo" photo={photoPreview} onClose={closePhoto} />
         )}
       </AnimatePresence>
     </section>

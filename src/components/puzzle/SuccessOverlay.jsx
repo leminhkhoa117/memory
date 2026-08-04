@@ -1,6 +1,6 @@
 import { motion as Motion } from 'framer-motion'
 
-function SuccessOverlay({ title, line, cta, onContinue }) {
+function SuccessOverlay({ title, line, prompt, cta, onContinue }) {
   return (
     <Motion.div
       className="puzzle-success"
@@ -35,13 +35,22 @@ function SuccessOverlay({ title, line, cta, onContinue }) {
         {line}
       </Motion.p>
 
+      <Motion.p
+        className="puzzle-success__prompt"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 1.45 }}
+      >
+        {prompt}
+      </Motion.p>
+
       <Motion.button
         type="button"
         className="puzzle-success__cta"
         onClick={onContinue}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.9 }}
+        transition={{ duration: 0.8, delay: 2.15 }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
       >

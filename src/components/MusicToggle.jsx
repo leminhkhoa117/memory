@@ -1,79 +1,83 @@
 import { motion as Motion } from 'framer-motion'
 import { Music2, VolumeX } from 'lucide-react'
-import { Howl, Howler } from 'howler'
+import { Howl } from 'howler'
 import { useEffect, useRef, useState } from 'react'
 
 function MusicToggle({ content }) {
   const soundRef = useRef(null)
+  const soundIdRef = useRef(null)
+  const isStartingRef = useRef(false)
+  const wantsMusicRef = useRef(false)
   const pauseTimeoutRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
-    let removeUnlockListeners = () => {}
-
     const sound = new Howl({
       src: [content.src],
       html5: true,
       loop: true,
-      preload: true,
+      preload: false,
       volume: 0,
-      onplay: () => {
-        sound.fade(sound.volume(), 0.42, 900)
+      onplay: (id) => {
+        isStartingRef.current = false
+        soundIdRef.current = id
+        sound.fade(sound.volume(id), 0.42, 900, id)
         setIsPlaying(true)
-        removeUnlockListeners()
       },
       onplayerror: () => {
+        isStartingRef.current = false
         setIsPlaying(false)
-
-        const unlockAudio = () => {
-          Howler.ctx?.resume?.()
-          sound.play()
-        }
-
-        const events = ['pointerdown', 'touchstart', 'keydown']
-        events.forEach((eventName) => {
-          window.addEventListener(eventName, unlockAudio, { once: true, capture: true })
-        })
-
-        removeUnlockListeners = () => {
-          events.forEach((eventName) => {
-            window.removeEventListener(eventName, unlockAudio, true)
-          })
-        }
       },
     })
 
     soundRef.current = sound
-    sound.play()
+    setIsPlaying(false)
+
+    if (wantsMusicRef.current) {
+      isStartingRef.current = true
+      soundIdRef.current = sound.play()
+    }
 
     return () => {
-      removeUnlockListeners()
       window.clearTimeout(pauseTimeoutRef.current)
       sound.unload()
       soundRef.current = null
+      soundIdRef.current = null
+      isStartingRef.current = false
     }
   }, [content.src])
 
   const toggleMusic = () => {
     const sound = soundRef.current
-    if (!sound) {
+    const soundId = soundIdRef.current
+    if (!sound || isStartingRef.current) {
       return
     }
 
     window.clearTimeout(pauseTimeoutRef.current)
 
     if (isPlaying) {
-      sound.fade(sound.volume(), 0, 700)
-      pauseTimeoutRef.current = window.setTimeout(() => sound.pause(), 720)
+      wantsMusicRef.current = false
+      sound.fade(sound.volume(soundId), 0, 700, soundId)
+      pauseTimeoutRef.current = window.setTimeout(() => sound.pause(soundId), 720)
       setIsPlaying(false)
       return
     }
 
-    if (!sound.playing()) {
-      sound.play()
+    wantsMusicRef.current = true
+
+    if (soundId === null) {
+      isStartingRef.current = true
+      soundIdRef.current = sound.play()
+      return
     }
-    sound.volume(0)
-    sound.fade(0, 0.42, 900)
+
+    if (!sound.playing(soundId)) {
+      isStartingRef.current = true
+      sound.play(soundId)
+    }
+    sound.volume(0, soundId)
+    sound.fade(0, 0.42, 900, soundId)
   }
 
   const label = isPlaying ? 'Tắt nhạc nền' : 'Bật nhạc nền'

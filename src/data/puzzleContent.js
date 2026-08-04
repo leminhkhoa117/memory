@@ -24,8 +24,10 @@ const puzzleContent = {
   dialLabel: 'Quay số để xác nhận',
   dialHelper: 'Quay lần lượt từng số theo đúng thứ tự trên khay.',
   successTitle: '06 · 01',
-  successLine: 'Ngày mà thế giới có thêm một người rất đáng để anh chờ.',
-  cta: 'Mở cuốn sổ',
+  successLine: 'Ngày một cô gái xinh đẹp được sinh ra đời.',
+  successPrompt:
+    'Bạn đã hoàn thành trò chơi và mở khoá thành công cuốn sổ bí mật, bạn có muốn mở cuốn sổ bí mật không?',
+  cta: 'Mở cuốn sổ bí mật',
 }
 
 export default puzzleContent

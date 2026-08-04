@@ -108,7 +108,7 @@ const mobilePages = [
 const notebookContent = {
   cover: {
     eyebrow: 'Sổ tay',
-    stamp: '06 · 01',
+    stamp: 'Cuốn sổ bí mật',
     title: story.intro.eyebrow,
     skipLabel: 'Bỏ qua',
   },

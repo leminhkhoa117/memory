@@ -1,4 +1,5 @@
 import { motion as Motion } from 'framer-motion'
+import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 const HOLES = Array.from({ length: 10 }, (_, index) => ({
@@ -20,7 +21,7 @@ const toPoint = (angle) => {
   }
 }
 
-function RotaryDial({ label, helper, answer, onSolved, onTick, onError }) {
+function RotaryDial({ label, helper, answer, onSolved, onTick, onError, onClose }) {
   const [entered, setEntered] = useState([])
   const [rotation, setRotation] = useState(0)
   const [isReturning, setIsReturning] = useState(false)
@@ -92,6 +93,9 @@ function RotaryDial({ label, helper, answer, onSolved, onTick, onError }) {
       <div className="rotary__head">
         <p className="rotary__label">{label}</p>
         <p className="rotary__helper">{helper}</p>
+        <button type="button" className="rotary__close" onClick={onClose} aria-label="Đóng bàn quay số">
+          <X size={18} strokeWidth={1.7} />
+        </button>
       </div>
 
       <Motion.div

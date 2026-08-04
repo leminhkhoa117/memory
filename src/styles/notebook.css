@@ -926,14 +926,15 @@
 
 .letter-envelope__wing--left {
   background: linear-gradient(115deg, #eae0c8 0%, #d8caa8 100%);
-  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  clip-path: polygon(0 0, 50% 46%, 0 100%);
 }
 
 .letter-envelope__wing--right {
   background: linear-gradient(245deg, #e5dbc1 0%, #d1c3a0 100%);
-  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+  clip-path: polygon(100% 0, 50% 46%, 100% 100%);
 }
 
+/* Nắp trên: hai gradient nửa khối vẽ đúng hai đường gấp chạy từ góc xuống đỉnh. */
 .letter-envelope__flap {
   position: absolute;
   top: 0;
@@ -941,7 +942,29 @@
   right: 0;
   height: 55%;
   transform-origin: top center;
-  background: linear-gradient(180deg, #f0e6cf 0%, #ded0b0 100%);
+  background-image:
+    linear-gradient(
+      to bottom left,
+      transparent calc(50% - 0.7px),
+      rgba(104, 87, 62, 0.55) 50%,
+      transparent calc(50% + 0.7px)
+    ),
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 0.7px),
+      rgba(104, 87, 62, 0.55) 50%,
+      transparent calc(50% + 0.7px)
+    ),
+    linear-gradient(180deg, #f2e8d2 0%, #ded0b0 100%);
+  background-size:
+    50% 100%,
+    50% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top right,
+    center;
+  background-repeat: no-repeat;
   box-shadow: inset 0 0 16px rgba(92, 76, 54, 0.24);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
@@ -963,14 +986,36 @@
   cursor: default;
 }
 
-/* Mép giấy gấp lên từ đáy phong bì. */
+/* Mép giấy gấp lên từ đáy phong bì, cũng dùng gradient nửa khối cho hai đường gấp. */
 .letter-envelope__pocket {
   position: absolute;
-  inset: 0;
+  inset: 46% 0 0;
   border-radius: 0 0 4px 4px;
-  background: linear-gradient(0deg, #e6dcc2 0%, #d3c5a3 100%);
+  background-image:
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 0.7px),
+      rgba(104, 87, 62, 0.55) 50%,
+      transparent calc(50% + 0.7px)
+    ),
+    linear-gradient(
+      to bottom left,
+      transparent calc(50% - 0.7px),
+      rgba(104, 87, 62, 0.55) 50%,
+      transparent calc(50% + 0.7px)
+    ),
+    linear-gradient(0deg, #e8dec6 0%, #d3c5a3 100%);
+  background-size:
+    50% 100%,
+    50% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top right,
+    center;
+  background-repeat: no-repeat;
   box-shadow: inset 0 0 16px rgba(92, 76, 54, 0.2);
-  clip-path: polygon(0 100%, 50% 46%, 100% 100%);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
 }
 
 .letter-envelope__seal-holder {

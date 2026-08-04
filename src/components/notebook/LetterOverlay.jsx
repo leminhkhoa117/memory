@@ -140,14 +140,6 @@ function LetterOverlay({ content, origin, onClose }) {
         style={{ pointerEvents: isOpen ? 'none' : 'auto' }}
         {...envelopeMotion}
       >
-        <Motion.span
-          className="letter-envelope__flap"
-          aria-hidden="true"
-          initial={false}
-          animate={{ rotateX: isOpen ? 172 : 0 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.75, ease: EASE }}
-        />
-
         <button
           type="button"
           className="letter-envelope"
@@ -155,7 +147,17 @@ function LetterOverlay({ content, origin, onClose }) {
           disabled={isOpen}
           aria-label={isOpen ? 'Lá thư đã mở' : 'Mở lá thư'}
         >
+          <span className="letter-envelope__wing letter-envelope__wing--left" aria-hidden="true" />
+          <span className="letter-envelope__wing letter-envelope__wing--right" aria-hidden="true" />
           <span className="letter-envelope__pocket" aria-hidden="true" />
+
+          <Motion.span
+            className="letter-envelope__flap"
+            aria-hidden="true"
+            initial={false}
+            animate={{ rotateX: isOpen ? 172 : 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.75, ease: EASE }}
+          />
 
           <Motion.span
             className="letter-envelope__seal-holder"

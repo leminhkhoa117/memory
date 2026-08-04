@@ -911,10 +911,27 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 56%;
-  background: linear-gradient(180deg, #6b5d45 0%, #8a7a5d 58%, #b3a483 100%);
+  height: 57%;
+  background: linear-gradient(180deg, #5f5340 0%, #77684f 58%, #8a7a5e 100%);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  opacity: 0.62;
+  opacity: 0.7;
+}
+
+/* Hai mép giấy gấp vào từ hai bên, chụm ở giữa lưng phong bì. */
+.letter-envelope__wing {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 14px rgba(92, 76, 54, 0.22);
+}
+
+.letter-envelope__wing--left {
+  background: linear-gradient(115deg, #eae0c8 0%, #d8caa8 100%);
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+}
+
+.letter-envelope__wing--right {
+  background: linear-gradient(245deg, #e5dbc1 0%, #d1c3a0 100%);
+  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
 }
 
 .letter-envelope__flap {
@@ -922,9 +939,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 54%;
+  height: 55%;
   transform-origin: top center;
-  background: linear-gradient(180deg, #ece2ca 0%, #dccdad 100%);
+  background: linear-gradient(180deg, #f0e6cf 0%, #ded0b0 100%);
+  box-shadow: inset 0 0 16px rgba(92, 76, 54, 0.24);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 
@@ -945,33 +963,14 @@
   cursor: default;
 }
 
+/* Mép giấy gấp lên từ đáy phong bì. */
 .letter-envelope__pocket {
   position: absolute;
-  inset: 42% 0 0;
-  border-radius: 0 0 4px 4px;
-  background: linear-gradient(170deg, #ded2b6 0%, #cabb99 100%);
-  box-shadow: inset 0 10px 14px -10px rgba(60, 48, 34, 0.45);
-  clip-path: polygon(0 12%, 50% 0, 100% 12%, 100% 100%, 0 100%);
-}
-
-/* Hai đường gấp của mép giấy hai bên. */
-.letter-envelope__pocket::after {
-  content: '';
-  position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom right,
-      transparent calc(50% - 0.5px),
-      rgba(120, 102, 74, 0.18) 50%,
-      transparent calc(50% + 0.5px)
-    ),
-    linear-gradient(
-      to bottom left,
-      transparent calc(50% - 0.5px),
-      rgba(120, 102, 74, 0.18) 50%,
-      transparent calc(50% + 0.5px)
-    );
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(0deg, #e6dcc2 0%, #d3c5a3 100%);
+  box-shadow: inset 0 0 16px rgba(92, 76, 54, 0.2);
+  clip-path: polygon(0 100%, 50% 46%, 100% 100%);
 }
 
 .letter-envelope__seal-holder {
@@ -1005,7 +1004,9 @@
   background:
     radial-gradient(circle at 22% 12%, rgba(212, 190, 152, 0.24), transparent 58%),
     linear-gradient(155deg, #f8f1e0 0%, #efe5cd 60%, #e3d7ba 100%);
-  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(120, 102, 74, 0.24),
+    0 22px 44px rgba(0, 0, 0, 0.55);
 }
 
 .letter-sheet::-webkit-scrollbar {

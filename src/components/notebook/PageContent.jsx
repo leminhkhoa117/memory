@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import WaxSeal from './WaxSeal'
 
 function NotebookVideo({ page, isActive }) {
   const videoRef = useRef(null)
@@ -74,7 +75,7 @@ function TextBlock({ page }) {
   )
 }
 
-function PageContent({ page, seal, isActive, onOpenLetter }) {
+function PageContent({ page, isActive, onOpenLetter }) {
   if (page.kind === 'photo') {
     return (
       <figure className="nb-media nb-photo">
@@ -127,9 +128,7 @@ function PageContent({ page, seal, isActive, onOpenLetter }) {
 
         <button type="button" className="nb-letter__envelope" onClick={onOpenLetter}>
           <span className="nb-letter__flap" aria-hidden="true" />
-          <span className="nb-letter__seal" aria-hidden="true">
-            {seal.mark}
-          </span>
+          <WaxSeal className="nb-letter__seal" />
         </button>
 
         <span className="nb-letter__hint">Chạm để cầm lá thư lên</span>

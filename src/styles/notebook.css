@@ -504,20 +504,11 @@
 }
 
 .nb-letter__seal {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: calc(52px * var(--nb-scale));
   height: calc(52px * var(--nb-scale));
   min-width: 34px;
   min-height: 34px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
   box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.38), 0 4px 10px rgba(0, 0, 0, 0.3);
-  font-family: 'Lora', serif;
-  font-size: clamp(0.7rem, calc(0.95rem * var(--nb-scale)), 0.95rem);
-  color: rgba(255, 231, 216, 0.86);
 }
 
 .nb-letter__hint {
@@ -734,34 +725,45 @@
 }
 
 .nb-cover__seal {
-  position: absolute;
-  right: 14%;
-  bottom: 12%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 54px;
   height: 54px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
   box-shadow:
     inset 0 2px 6px rgba(255, 255, 255, 0.16),
     inset 0 -4px 10px rgba(0, 0, 0, 0.4),
     0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
-.nb-cover__seal::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
+/* Con dấu sáp hình trái tim dùng chung cho bìa sổ và phong thư. */
+.wax-seal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
   border-radius: 50%;
-  border: 1px dashed rgba(255, 225, 205, 0.35);
+  background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
+  color: rgba(255, 226, 210, 0.88);
 }
 
-.nb-cover__seal-mark {
-  font-family: 'Lora', serif;
-  font-size: 0.95rem;
-  color: rgba(255, 231, 216, 0.86);
+.wax-seal::before {
+  content: '';
+  position: absolute;
+  inset: 11%;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 225, 205, 0.32);
+}
+
+.wax-seal__mark {
+  position: relative;
+  width: 44%;
+  height: 44%;
+  filter: drop-shadow(0 1px 0 rgba(58, 24, 22, 0.55));
+}
+
+.nb-cover__seal {
+  position: absolute;
+  right: 14%;
+  bottom: 12%;
 }
 
 /* --------------------------------------------------------------------------
@@ -836,6 +838,7 @@
   position: fixed;
   inset: 0;
   z-index: 200;
+  --envelope-width: min(360px, 78vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -867,19 +870,50 @@
 }
 
 .letter-item {
-  position: relative;
-  z-index: 2;
-  width: min(360px, 78vw);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--envelope-width);
   aspect-ratio: 3 / 2;
+  margin-left: calc(var(--envelope-width) / -2);
+  margin-top: calc(var(--envelope-width) / -3);
   transform-style: preserve-3d;
+  filter: drop-shadow(0 24px 32px rgba(0, 0, 0, 0.55));
+}
+
+.letter-item--back {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.letter-item--front {
+  z-index: 3;
 }
 
 .letter-envelope__back {
   position: absolute;
   inset: 0;
   border-radius: 4px;
-  background: linear-gradient(160deg, #e2d7bd 0%, #cec0a0 100%);
-  box-shadow: 0 26px 48px rgba(0, 0, 0, 0.6);
+  background:
+    repeating-linear-gradient(
+      93deg,
+      rgba(255, 255, 255, 0.05) 0 2px,
+      rgba(122, 104, 76, 0.05) 2px 4px
+    ),
+    linear-gradient(160deg, #e6dcc2 0%, #d4c6a5 100%);
+  box-shadow: inset 0 0 0 1px rgba(120, 102, 74, 0.3);
+}
+
+/* Lòng phong bì hiện ra khi nắp thư được mở. */
+.letter-envelope__lining {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 54%;
+  background: linear-gradient(180deg, #6b5d45 0%, #8a7a5d 58%, #b3a483 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: 0.62;
 }
 
 .letter-envelope__flap {
@@ -887,10 +921,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 52%;
+  height: 54%;
   transform-origin: top center;
-  backface-visibility: hidden;
-  background: linear-gradient(180deg, #e7ddc4 0%, #d3c6a6 100%);
+  background: linear-gradient(180deg, #ece2ca 0%, #d9cbab 100%);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   box-shadow: 0 6px 12px rgba(60, 48, 34, 0.28);
 }
@@ -918,43 +951,88 @@
   border-radius: 0 0 4px 4px;
   background: linear-gradient(170deg, #ded2b6 0%, #cabb99 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    0 -6px 16px rgba(60, 48, 34, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 -8px 18px rgba(60, 48, 34, 0.26);
   clip-path: polygon(0 12%, 50% 0, 100% 12%, 100% 100%, 0 100%);
 }
 
-.letter-envelope__seal {
+/* Hai đường gấp của mép giấy hai bên. */
+.letter-envelope__pocket::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 0.5px),
+      rgba(120, 102, 74, 0.18) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom left,
+      transparent calc(50% - 0.5px),
+      rgba(120, 102, 74, 0.18) 50%,
+      transparent calc(50% + 0.5px)
+    );
+}
+
+.letter-envelope__seal-holder {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 22%;
+}
+
+.letter-envelope__seal {
   width: 58px;
   height: 58px;
-  margin-bottom: 24%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #a75f56 0%, #8d4a45 45%, #63302f 100%);
-  box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.42);
-  font-family: 'Lora', serif;
-  font-size: 1rem;
-  color: rgba(255, 231, 216, 0.88);
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.14),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.4),
+    0 5px 12px rgba(0, 0, 0, 0.42);
 }
 
 .letter-sheet {
   position: fixed;
   left: 50%;
   top: 50%;
-  z-index: 210;
+  z-index: 2;
   width: min(430px, 86vw);
   max-height: 78vh;
   overflow-y: auto;
+  scrollbar-width: none;
   padding: 30px 28px 34px;
-  transform-origin: bottom center;
+  transform-origin: top center;
   text-align: left;
   background:
     radial-gradient(circle at 22% 12%, rgba(212, 190, 152, 0.24), transparent 58%),
     linear-gradient(155deg, #f8f1e0 0%, #efe5cd 60%, #e3d7ba 100%);
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
+}
+
+.letter-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+/* Vết gấp đôi của tờ thư khi còn nằm trong phong bì. */
+.letter-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 32.6%,
+    rgba(120, 102, 74, 0.05) 33.2%,
+    rgba(120, 102, 74, 0.11) 33.5%,
+    rgba(120, 102, 74, 0.05) 33.8%,
+    transparent 34.4%,
+    transparent 65.6%,
+    rgba(120, 102, 74, 0.05) 66.2%,
+    rgba(120, 102, 74, 0.11) 66.5%,
+    rgba(120, 102, 74, 0.05) 66.8%,
+    transparent 67.4%
+  );
 }
 
 .letter-sheet__chapter {

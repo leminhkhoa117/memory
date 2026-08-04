@@ -1,10 +1,5 @@
 import { story } from '../content'
 
-// Con dấu sáp này xuất hiện trên bìa sổ ở đầu truyện và quay lại trên phong thư ở trang cuối.
-const seal = {
-  mark: '06',
-}
-
 const galleryPages = story.gallery.moments.map((moment, index) => ({
   id: `khoanh-khac-${index + 1}`,
   kind: 'photo',
@@ -111,7 +106,6 @@ const mobilePages = [
 ]
 
 const notebookContent = {
-  seal,
   cover: {
     eyebrow: 'Sổ tay',
     stamp: '06 · 01',

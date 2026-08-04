@@ -74,7 +74,7 @@ function App() {
       {isStartMounted && <StartScreen content={puzzleContent.intro} onStart={handleStart} />}
 
       {stage === STAGE.notebook && (
-        <Notebook content={notebookContent} seal={notebookContent.seal} />
+        <Notebook content={notebookContent} />
       )}
 
       <MusicToggle content={story.music} />

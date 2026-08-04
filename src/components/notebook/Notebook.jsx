@@ -9,12 +9,13 @@ import NotebookPage from './NotebookPage'
 import NotepadFlip from './NotepadFlip'
 import PageContent from './PageContent'
 import LetterOverlay from './LetterOverlay'
+import WaxSeal from './WaxSeal'
 import '../../styles/notebook.css'
 
 const HINT_DURATION = 6000
 const PAD_COVER = { id: 'bia-so-tay', kind: 'cover' }
 
-function Notebook({ content, seal }) {
+function Notebook({ content }) {
   const bookRef = useRef(null)
   const stageRef = useRef(null)
   const [pageIndex, setPageIndex] = useState(0)
@@ -158,7 +159,6 @@ function Notebook({ content, seal }) {
           <NotepadFlip
             pages={padSheets}
             cover={content.cover}
-            seal={seal}
             index={padIndex}
             onChange={handlePadChange}
             onOpenLetter={handleOpenLetter}
@@ -191,9 +191,7 @@ function Notebook({ content, seal }) {
                 <p className="nb-cover__eyebrow">{content.cover.eyebrow}</p>
                 <p className="nb-cover__stamp">{content.cover.stamp}</p>
                 <h2 className="nb-cover__title">{content.cover.title}</h2>
-                <span className="nb-cover__seal" aria-hidden="true">
-                  <span className="nb-cover__seal-mark">{seal.mark}</span>
-                </span>
+                <WaxSeal className="nb-cover__seal" />
               </NotebookPage>
 
               {pages.map((page, index) => {
@@ -206,12 +204,7 @@ function Notebook({ content, seal }) {
                     <span className="nb-paper__margin" aria-hidden="true" />
 
                     <div className={`nb-paper__body nb-paper__body--${page.kind}`}>
-                      <PageContent
-                        page={page}
-                        seal={seal}
-                        isActive={isActive}
-                        onOpenLetter={handleOpenLetter}
-                      />
+                      <PageContent page={page} isActive={isActive} onOpenLetter={handleOpenLetter} />
                     </div>
 
                     <span className="nb-paper__number">{String(bookIndex).padStart(2, '0')}</span>
@@ -275,7 +268,6 @@ function Notebook({ content, seal }) {
           <LetterOverlay
             key="letter"
             content={content.letter}
-            seal={seal}
             origin={letterOrigin}
             onClose={closeLetter}
           />

@@ -2,13 +2,14 @@ import { motion as Motion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import PageContent from './PageContent'
+import WaxSeal from './WaxSeal'
 
 const FLIP_DURATION = 720
 const SWIPE_THRESHOLD = 46
 const RING_COUNT = 11
 
 /** Sổ tay lật từ dưới lên: mỗi tờ xoay quanh mép trên, đúng kiểu sổ lò xo cầm tay. */
-function NotepadFlip({ pages, cover, seal, index, onChange, onOpenLetter }) {
+function NotepadFlip({ pages, cover, index, onChange, onOpenLetter }) {
   const [flippingIndex, setFlippingIndex] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const startRef = useRef(null)
@@ -79,16 +80,13 @@ function NotepadFlip({ pages, cover, seal, index, onChange, onOpenLetter }) {
                   <p className="nb-cover__eyebrow">{cover.eyebrow}</p>
                   <p className="nb-cover__stamp">{cover.stamp}</p>
                   <h2 className="nb-cover__title">{cover.title}</h2>
-                  <span className="nb-cover__seal" aria-hidden="true">
-                    <span className="nb-cover__seal-mark">{seal.mark}</span>
-                  </span>
+                  <WaxSeal className="nb-cover__seal" />
                 </div>
               ) : (
                 <>
                   <div className={`nb-paper__body nb-paper__body--${page.kind}`}>
                     <PageContent
                       page={page}
-                      seal={seal}
                       isActive={pageIndex === index}
                       onOpenLetter={onOpenLetter}
                     />

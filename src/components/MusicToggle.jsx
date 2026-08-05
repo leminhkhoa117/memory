@@ -3,11 +3,12 @@ import { Music2, VolumeX } from 'lucide-react'
 import { Howl } from 'howler'
 import { useEffect, useRef, useState } from 'react'
 
-function MusicToggle({ content }) {
+function MusicToggle({ content, autoPlay = false }) {
   const soundRef = useRef(null)
   const soundIdRef = useRef(null)
   const isStartingRef = useRef(false)
-  const wantsMusicRef = useRef(false)
+  // Nếu autoPlay thì mặc định muốn bật nhạc ngay từ đầu.
+  const wantsMusicRef = useRef(autoPlay)
   const pauseTimeoutRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -46,6 +47,36 @@ function MusicToggle({ content }) {
       isStartingRef.current = false
     }
   }, [content.src])
+
+  // Khi autoPlay=true: lắng nghe tương tác đầu tiên của user rồi mới bật nhạc.
+  // Browser chặn autoplay audio cho đến khi có gesture, nên dùng cách này là chuẩn nhất.
+  useEffect(() => {
+    if (!autoPlay) {
+      return undefined
+    }
+
+    const tryAutoPlay = () => {
+      const sound = soundRef.current
+      if (!sound || isStartingRef.current || soundIdRef.current !== null) {
+        return
+      }
+      wantsMusicRef.current = true
+      isStartingRef.current = true
+      soundIdRef.current = sound.play()
+    }
+
+    const EVENTS = ['click', 'keydown', 'touchstart', 'pointerdown']
+    const onFirstInteraction = () => {
+      tryAutoPlay()
+      EVENTS.forEach((e) => document.removeEventListener(e, onFirstInteraction, true))
+    }
+
+    EVENTS.forEach((e) => document.addEventListener(e, onFirstInteraction, { capture: true, once: true }))
+
+    return () => {
+      EVENTS.forEach((e) => document.removeEventListener(e, onFirstInteraction, true))
+    }
+  }, [autoPlay])
 
   const toggleMusic = () => {
     const sound = soundRef.current

@@ -81,7 +81,7 @@ function App() {
         {stage === STAGE.notebook && <Notebook content={notebookContent} />}
       </Suspense>
 
-      <MusicToggle content={music} />
+      <MusicToggle content={music} autoPlay={stage !== STAGE.notebook} />
     </>
   )
 }

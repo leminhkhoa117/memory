@@ -7,8 +7,8 @@ function MusicToggle({ content, autoPlay = false }) {
   const soundRef = useRef(null)
   const soundIdRef = useRef(null)
   const isStartingRef = useRef(false)
-  // Nếu autoPlay thì mặc định muốn bật nhạc ngay từ đầu.
-  const wantsMusicRef = useRef(autoPlay)
+  // Luôn khởi tạo false — autoPlay sẽ được xử lý riêng qua gesture listener.
+  const wantsMusicRef = useRef(false)
   const pauseTimeoutRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -27,6 +27,8 @@ function MusicToggle({ content, autoPlay = false }) {
       },
       onplayerror: () => {
         isStartingRef.current = false
+        // Reset về null để gesture listener có thể thử lại.
+        soundIdRef.current = null
         setIsPlaying(false)
       },
     })
@@ -34,6 +36,7 @@ function MusicToggle({ content, autoPlay = false }) {
     soundRef.current = sound
     setIsPlaying(false)
 
+    // Chỉ tự phát khi user đã bật nhạc trước đó (chuyển track).
     if (wantsMusicRef.current) {
       isStartingRef.current = true
       soundIdRef.current = sound.play()
@@ -48,8 +51,8 @@ function MusicToggle({ content, autoPlay = false }) {
     }
   }, [content.src])
 
-  // Khi autoPlay=true: lắng nghe tương tác đầu tiên của user rồi mới bật nhạc.
-  // Browser chặn autoplay audio cho đến khi có gesture, nên dùng cách này là chuẩn nhất.
+  // Khi autoPlay=true: bắt gesture đầu tiên của user rồi mới bật nhạc.
+  // Browser chặn audio cho đến khi có user gesture, nên đây là cách duy nhất đúng.
   useEffect(() => {
     if (!autoPlay) {
       return undefined
@@ -57,12 +60,25 @@ function MusicToggle({ content, autoPlay = false }) {
 
     const tryAutoPlay = () => {
       const sound = soundRef.current
-      if (!sound || isStartingRef.current || soundIdRef.current !== null) {
+      // Đang trong quá trình start thì bỏ qua.
+      if (!sound || isStartingRef.current) {
         return
       }
+
       wantsMusicRef.current = true
-      isStartingRef.current = true
-      soundIdRef.current = sound.play()
+      const soundId = soundIdRef.current
+
+      if (soundId === null) {
+        // Chưa play lần nào — play mới.
+        isStartingRef.current = true
+        soundIdRef.current = sound.play()
+      } else if (!sound.playing(soundId)) {
+        // Đã từng play nhưng bị block/dừng — resume với fade in.
+        isStartingRef.current = true
+        sound.volume(0, soundId)
+        sound.play(soundId)
+        sound.fade(0, 0.42, 900, soundId)
+      }
     }
 
     const EVENTS = ['click', 'keydown', 'touchstart', 'pointerdown']
@@ -71,7 +87,9 @@ function MusicToggle({ content, autoPlay = false }) {
       EVENTS.forEach((e) => document.removeEventListener(e, onFirstInteraction, true))
     }
 
-    EVENTS.forEach((e) => document.addEventListener(e, onFirstInteraction, { capture: true, once: true }))
+    EVENTS.forEach((e) =>
+      document.addEventListener(e, onFirstInteraction, { capture: true, once: true }),
+    )
 
     return () => {
       EVENTS.forEach((e) => document.removeEventListener(e, onFirstInteraction, true))
